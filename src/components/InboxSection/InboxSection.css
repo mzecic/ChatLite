@@ -3,8 +3,17 @@
     height: 100vh;
     border: 1px solid black;
     margin: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .middle-div h1 {
     overflow-y: scroll;
 }
+
+.messages-list {
+    display: flex;
+    flex-direction: column;
+}
+

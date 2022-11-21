@@ -32,7 +32,7 @@ export default function InboxPage({ user }) {
             <>
                 <ChatList inboxes={inboxes} user={user} handleInboxClick={handleInboxClick}/>
                 <InboxSection selectedInbox={selectedInbox} user={user}/>
-                <div className="right-div">Hello</div>
+                <div className="right-div">Users</div>
             </>
             :
             <>

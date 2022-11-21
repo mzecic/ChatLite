@@ -1,6 +1,10 @@
 import { useState } from 'react';
+import { format } from 'timeago.js';
+
+
 
 export default function MessageListItem({ message, user, secondUser }) {
+
 
         return(
             <div className="chat-row">
@@ -12,7 +16,10 @@ export default function MessageListItem({ message, user, secondUser }) {
                 :
                     <div className="recipient-message">
                         <p>{secondUser.name}</p>
-                        <p>{message.content}</p>
+                        <div>
+                            <p>{message.content}</p>
+                            <p>{ format(message.createdAt) }</p>
+                        </div>
                     </div>
                 }
             </div>
