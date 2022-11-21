@@ -9,6 +9,8 @@ export default function InboxPage({ user }) {
     const [inboxes, setInboxes] = useState([]);
     const [selectedInbox, setSelectedInbox] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
+    const [messageForSocket, setMessageForSocket] = useState(null);
+    const [messageFromSocket, setMessageFromSocket] = useState(null);
     const socket = useRef();
 
 
@@ -19,6 +21,20 @@ export default function InboxPage({ user }) {
             setOnlineUsers(users);
         })
     }, [user])
+
+    useEffect(() => {
+        socket.current.on('get-message', function(message) {
+            setMessageFromSocket(message)
+        })
+    }, [messageFromSocket])
+
+
+    useEffect(() => {
+        if(messageForSocket !== null) {
+            socket.current.emit('send-message', messageForSocket)
+        }
+    },[messageForSocket]);
+
 
     useEffect(function() {
         (async function() {
@@ -43,7 +59,11 @@ export default function InboxPage({ user }) {
             {inboxes.length ?
             <>
                 <ChatList inboxes={inboxes} user={user} handleInboxClick={handleInboxClick}/>
-                <InboxSection selectedInbox={selectedInbox} user={user}/>
+                <InboxSection
+                messageFromSocket={messageFromSocket}
+                setMessageForSocket={setMessageForSocket}
+                selectedInbox={selectedInbox}
+                user={user}/>
                 <div className="right-div">Users</div>
             </>
             :

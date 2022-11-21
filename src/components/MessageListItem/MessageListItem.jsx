@@ -11,6 +11,7 @@ export default function MessageListItem({ message, user, secondUser }) {
                     <div className="your-message">
                         <p>You</p>
                         <p>{message.content}</p>
+                        <p>{ format(message.createdAt) }</p>
                     </div>
                 :
                     <div className="recipient-message">

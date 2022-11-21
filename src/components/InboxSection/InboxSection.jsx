@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import '../InboxSection/InboxSection.css';
 import * as inboxAPI from '../../utilities/inbox-api';
 import * as messagesAPI from '../../utilities/messages-api';
@@ -8,10 +8,15 @@ import { IoSendOutline } from 'react-icons/io5';
 
 
 
-export default function InboxSection({ selectedInbox, user }) {
+
+export default function InboxSection({ selectedInbox, user, setMessageForSocket, messageFromSocket }) {
     const [secondUser, setSecondUser] = useState({});
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
+
+
+
+
 
     useEffect(function() {
         (async function() {
@@ -21,7 +26,7 @@ export default function InboxSection({ selectedInbox, user }) {
                 setSecondUser(fetchUser[0])
             }
         })();
-}, [selectedInbox, user])
+    }, [selectedInbox, user])
 
     useEffect(function() {
 
@@ -32,7 +37,14 @@ export default function InboxSection({ selectedInbox, user }) {
         }
     })();
 
-}, [selectedInbox])
+    }, [selectedInbox])
+
+    useEffect(function() {
+        if(messageFromSocket && messageFromSocket.inboxId === selectedInbox._id){
+            setMessages([...messages, messageFromSocket])
+        }
+        console.log(messageFromSocket)
+    }, [messageFromSocket])
 
     function handleChange(e) {
         setText(e);
@@ -49,7 +61,11 @@ export default function InboxSection({ selectedInbox, user }) {
         const result = await messagesAPI.createMessage(message);
         setMessages([...messages, result]);
         setText('');
+
+        const receiverId = selectedInbox.users.find(id => id !== user._id);
+        setMessageForSocket({...message, receiverId});
     }
+
 
     return(
         <div className="middle-div">
