@@ -6,18 +6,20 @@ import AuthPage from '../AuthPage/AuthPage'
 import NewOrderPage from '../NewOrderPage/NewOrderPage'
 import OrderHistoryPage from '../OrderHistoryPage/OrderHistoryPage'
 import NavBar from '../../components/NavBar/NavBar'
+import InboxPage from '../InboxPage/InboxPage'
 
 export default function App() {
   const [user, setUser] = useState(getUser())
 
   return (
     <main className="App">
-      { user ? 
+      { user ?
         <>
           <NavBar user={user} setUser={setUser} />
           <Routes>
             <Route path="/orders/new" element={<NewOrderPage />} />
             <Route path="/orders" element={<OrderHistoryPage />} />
+            <Route path="/inbox" element={<InboxPage user={user}/>}/>
           </Routes>
         </>
         :
@@ -26,5 +28,3 @@ export default function App() {
     </main>
   );
 }
-
-

@@ -9,4 +9,4 @@ const inboxSchema = new Schema({
     timestamps: true,
 })
 
-module.export = mongoose.model('Inbox', inboxSchema)
+module.exports = mongoose.model('Inbox', inboxSchema)

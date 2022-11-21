@@ -1,0 +1,6 @@
+.left-div {
+    grid-column: 1/1;
+    height: 100vh;
+    border: 1px solid black;
+    margin: 15px;
+}

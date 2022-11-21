@@ -6,8 +6,8 @@ module.exports = {
 }
 
 async function create(req, res) {
-    const {inboxId, senderId, text} = req.body
-    const message = new Message({ inboxId, senderId,text });
+    const {inboxId, senderId, content} = req.body
+    const message = new Message({ inboxId, senderId, content });
     try {
         const result = await message.save();
         res.json(result);

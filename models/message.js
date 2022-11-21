@@ -8,7 +8,7 @@ const messageSchema = new Schema({
     senderId: {
         type: String,
     },
-    text: {
+    content: {
         type: String,
     }
 }, {

@@ -1,0 +1,10 @@
+.middle-div {
+    grid-column: 2/2;
+    height: 100vh;
+    border: 1px solid black;
+    margin: 15px;
+}
+
+.middle-div h1 {
+    overflow-y: scroll;
+}
