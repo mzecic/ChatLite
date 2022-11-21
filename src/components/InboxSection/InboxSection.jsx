@@ -14,8 +14,12 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
 
-
-
+    useEffect(function() {
+        if(messageFromSocket !== null && messageFromSocket.inboxId === selectedInbox._id){
+            setMessages([...messages, messageFromSocket])
+        }
+        console.log(messageFromSocket)
+    }, [messageFromSocket])
 
 
     useEffect(function() {
@@ -39,12 +43,6 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
 
     }, [selectedInbox])
 
-    useEffect(function() {
-        if(messageFromSocket && messageFromSocket.inboxId === selectedInbox._id){
-            setMessages([...messages, messageFromSocket])
-        }
-        console.log(messageFromSocket)
-    }, [messageFromSocket])
 
     function handleChange(e) {
         setText(e);

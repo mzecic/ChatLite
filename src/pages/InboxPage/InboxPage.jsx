@@ -26,14 +26,15 @@ export default function InboxPage({ user }) {
         socket.current.on('get-message', function(message) {
             setMessageFromSocket(message)
         })
-    }, [messageFromSocket])
-
+    }, [])
 
     useEffect(() => {
         if(messageForSocket !== null) {
             socket.current.emit('send-message', messageForSocket)
         }
     },[messageForSocket]);
+
+
 
 
     useEffect(function() {
