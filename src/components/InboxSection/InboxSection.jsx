@@ -7,6 +7,7 @@ import InputEmoji from "react-input-emoji";
 import { IoSendOutline } from 'react-icons/io5';
 
 
+
 export default function InboxSection({ selectedInbox, user }) {
     const [secondUser, setSecondUser] = useState({});
     const [messages, setMessages] = useState([]);
@@ -33,14 +34,22 @@ export default function InboxSection({ selectedInbox, user }) {
 
 }, [selectedInbox])
 
-    function handleChange(text) {
-        setText(text)
+    function handleChange(e) {
+        setText(e);
     }
 
-// console.log(user)
-// console.log(selectedInbox)
-// console.log(secondUser)
-// console.log(messages)
+    async function handleClick(e) {
+        e.preventDefault();
+        const message = {
+            senderId: user,
+            content: text,
+            inboxId: selectedInbox._id
+        }
+
+        const result = await messagesAPI.createMessage(message);
+        setMessages([...messages, result]);
+        setText('');
+    }
 
     return(
         <div className="middle-div">
@@ -62,7 +71,7 @@ export default function InboxSection({ selectedInbox, user }) {
                 value={text}
                 onChange={handleChange}
                 />
-                <button type="submit"><IoSendOutline /></button>
+                <button onClick={handleClick}type="submit"><IoSendOutline /></button>
             </div>
         </div>
     )

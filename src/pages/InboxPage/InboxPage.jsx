@@ -1,12 +1,24 @@
 import './InboxPage.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as inboxAPI from '../../utilities/inbox-api';
 import ChatList from '../../components/ChatList/ChatList';
 import InboxSection from '../../components/InboxSection/InboxSection';
+import { io } from 'socket.io-client';
 
 export default function InboxPage({ user }) {
     const [inboxes, setInboxes] = useState([]);
     const [selectedInbox, setSelectedInbox] = useState(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
+    const socket = useRef();
+
+
+    useEffect(function() {
+        socket.current = io('http://localhost:8800');
+        socket.current.emit('add-user', user._id);
+        socket.current.on('get-users', (users) => {
+            setOnlineUsers(users);
+        })
+    }, [user])
 
     useEffect(function() {
         (async function() {
