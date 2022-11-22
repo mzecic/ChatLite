@@ -10,11 +10,20 @@ import socket from '../../utilities/socket';
 
 
 
-export default function InboxSection({ selectedInbox, user, setMessageForSocket, messageFromSocket }) {
+export default function InboxSection({ selectedInbox, user }) {
     const [secondUser, setSecondUser] = useState({});
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
 
+
+    useEffect(function() {
+        socket.on('receive-message', function(message, secondUser, selectedInbox) {
+            if(message.inboxId === selectedInbox._id) {
+                console.log('message received')
+                setMessages([...messages, message.content])
+            }
+        })
+    }, [messages])
 
     useEffect(function() {
         socket.on('data-received', handleDataReceived);
@@ -41,6 +50,8 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
             const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
             setMessages(inboxMessages);
         }
+
+        socket.emit('inbox', selectedInbox)
     })();
 
     }, [selectedInbox])
@@ -61,11 +72,12 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
             inboxId: selectedInbox._id
         }
 
-        const result = await messagesAPI.createMessage(message);
-        setMessages([...messages, result]);
+        const newMessage = await messagesAPI.createMessage(message);
+        socket.emit('send-message', newMessage, secondUser, selectedInbox)
+        setMessages([...messages, newMessage]);
         setText('');
+        console.log(message.content)
 
-        socket.emit('client-clicked')
     }
 
     return(
