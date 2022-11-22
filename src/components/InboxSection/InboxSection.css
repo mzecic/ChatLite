@@ -17,3 +17,11 @@
     flex-direction: column;
     overflow-y: scroll;
 }
+
+.input-div {
+    display: flex;
+}
+
+.input {
+    width: 60vm
+}

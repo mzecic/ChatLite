@@ -9,9 +9,4 @@
     grid-template-rows: 100%;
 }
 
-.right-div {
-    grid-column: 3/3;
-    height: 100vh;
-    border: 1px solid black;
-    margin: 15px;
-}
+

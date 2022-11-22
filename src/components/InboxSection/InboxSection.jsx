@@ -15,16 +15,16 @@ export default function InboxSection({ selectedInbox, user }) {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
 
-    useEffect(function() {
-        socket.on('hello', function() {
-            console.log('hello')
-        })
-    }, [])
+    // useEffect(function() {
+    //     socket.on('hello', function() {
+    //         console.log('hello')
+    //     })
+    // }, [])
 
     useEffect(function() {
         socket.on('receive-message', function(message, secondUser, selectedInbox) {
             if(message.inboxId === selectedInbox._id) {
-                console.log('message received')
+                // console.log('message received')
                 setMessages([...messages, message])
             }
         })
@@ -48,8 +48,6 @@ export default function InboxSection({ selectedInbox, user }) {
             setMessages(inboxMessages);
             socket.emit('inbox', selectedInbox);
         }
-
-
     })();
 
     }, [selectedInbox])
@@ -74,13 +72,8 @@ export default function InboxSection({ selectedInbox, user }) {
         // setMessages([...messages, newMessage]);
         socket.emit('send-message', newMessage, secondUser, selectedInbox)
         setText('');
-        console.log(message.content)
-
     }
 
-    function handleClick2() {
-        socket.emit('text', 'hello', selectedInbox);
-    }
     return(
         <div className="middle-div">
             <div className="messages-list">
@@ -96,14 +89,19 @@ export default function InboxSection({ selectedInbox, user }) {
                 <h1>Select a chat</h1>
             }
             </div>
-            <div className="input-div">
-                <InputEmoji
-                value={text}
-                onChange={handleChange}
-                />
-                <button onClick={handleClick}type="submit"><IoSendOutline /></button>
-                <button onClick={handleClick2}type="submit"><IoSendOutline /></button>
-            </div>
+            {selectedInbox ?
+                <div className="input-div">
+                    <InputEmoji
+                    className="input"
+                    value={text}
+                    onChange={handleChange}
+                    />
+                    <button onClick={handleClick}type="submit"><IoSendOutline /></button>
+                </div>
+            :
+                <div></div>
+            }
+
         </div>
     )
 }
