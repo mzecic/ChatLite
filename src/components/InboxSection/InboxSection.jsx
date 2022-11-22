@@ -5,6 +5,7 @@ import * as messagesAPI from '../../utilities/messages-api';
 import MessageList from '../MessageList/MessageList';
 import InputEmoji from "react-input-emoji";
 import { IoSendOutline } from 'react-icons/io5';
+import socket from '../../utilities/socket';
 
 
 
@@ -14,6 +15,14 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
 
+
+    useEffect(function() {
+        socket.on('data-received', handleDataReceived);
+
+        return function () {
+            socket.removeListener('data-received', handleDataReceived);
+        }
+    }, [])
 
     useEffect(function() {
         (async function() {
@@ -36,13 +45,16 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
 
     }, [selectedInbox])
 
+    function handleDataReceived(data) {
+        console.log(data);
+      }
 
     function handleChange(e) {
         setText(e);
     }
 
     async function handleClick(e) {
-        e.preventDefault();
+
         const message = {
             senderId: user,
             content: text,
@@ -53,8 +65,8 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
         setMessages([...messages, result]);
         setText('');
 
+        socket.emit('client-clicked')
     }
-
 
     return(
         <div className="middle-div">
