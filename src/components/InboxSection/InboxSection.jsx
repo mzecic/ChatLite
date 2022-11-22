@@ -15,23 +15,20 @@ export default function InboxSection({ selectedInbox, user }) {
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
 
+    useEffect(function() {
+        socket.on('hello', function() {
+            console.log('hello')
+        })
+    }, [])
 
     useEffect(function() {
         socket.on('receive-message', function(message, secondUser, selectedInbox) {
             if(message.inboxId === selectedInbox._id) {
                 console.log('message received')
-                setMessages([...messages, message.content])
+                setMessages([...messages, message])
             }
         })
     }, [messages])
-
-    useEffect(function() {
-        socket.on('data-received', handleDataReceived);
-
-        return function () {
-            socket.removeListener('data-received', handleDataReceived);
-        }
-    }, [])
 
     useEffect(function() {
         (async function() {
@@ -49,9 +46,10 @@ export default function InboxSection({ selectedInbox, user }) {
         if (selectedInbox) {
             const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
             setMessages(inboxMessages);
+            socket.emit('inbox', selectedInbox);
         }
 
-        socket.emit('inbox', selectedInbox)
+
     })();
 
     }, [selectedInbox])
@@ -73,13 +71,16 @@ export default function InboxSection({ selectedInbox, user }) {
         }
 
         const newMessage = await messagesAPI.createMessage(message);
+        // setMessages([...messages, newMessage]);
         socket.emit('send-message', newMessage, secondUser, selectedInbox)
-        setMessages([...messages, newMessage]);
         setText('');
         console.log(message.content)
 
     }
 
+    function handleClick2() {
+        socket.emit('text', 'hello', selectedInbox);
+    }
     return(
         <div className="middle-div">
             <div className="messages-list">
@@ -101,6 +102,7 @@ export default function InboxSection({ selectedInbox, user }) {
                 onChange={handleChange}
                 />
                 <button onClick={handleClick}type="submit"><IoSendOutline /></button>
+                <button onClick={handleClick2}type="submit"><IoSendOutline /></button>
             </div>
         </div>
     )
