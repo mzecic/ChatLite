@@ -13,14 +13,14 @@ export default function InboxPage({ user }) {
     const [messageFromSocket, setMessageFromSocket] = useState(null);
     const socket = useRef();
 
-
     useEffect(function() {
         socket.current = io('http://localhost:8800');
         socket.current.emit('add-user', user._id);
         socket.current.on('get-users', (users) => {
             setOnlineUsers(users);
+            console.log(onlineUsers)
         })
-    }, [user])
+    }, [])
 
     useEffect(() => {
         socket.current.on('get-message', function(message) {

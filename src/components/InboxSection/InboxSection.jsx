@@ -18,7 +18,7 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
         if(messageFromSocket !== null && messageFromSocket.inboxId === selectedInbox._id){
             setMessages([...messages, messageFromSocket])
         }
-        console.log(messageFromSocket)
+        console.log(messages)
     }, [messageFromSocket])
 
 
