@@ -14,13 +14,6 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
 
-    useEffect(function() {
-        if(messageFromSocket !== null && messageFromSocket.inboxId === selectedInbox._id){
-            setMessages([...messages, messageFromSocket])
-        }
-        console.log(messageFromSocket)
-    }, [messageFromSocket])
-
 
     useEffect(function() {
         (async function() {
@@ -60,8 +53,6 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
         setMessages([...messages, result]);
         setText('');
 
-        const receiverId = selectedInbox.users.find(id => id !== user._id);
-        setMessageForSocket({...message, receiverId});
     }
 
 
