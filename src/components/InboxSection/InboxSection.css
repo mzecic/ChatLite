@@ -14,7 +14,7 @@
 
 .messages-list {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     overflow-y: scroll;
 }
 
@@ -22,6 +22,12 @@
     display: flex;
 }
 
-.input {
-    width: 60vm
+.react-input-emoji-input {
+    width: 100px;
+}
+
+.text-form {
+    width: 100%;
+    gap: none;
+    display: block;
 }

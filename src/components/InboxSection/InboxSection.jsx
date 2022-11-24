@@ -10,21 +10,27 @@ import socket from '../../utilities/socket';
 
 
 
-export default function InboxSection({ selectedInbox, user }) {
+export default function InboxSection({ selectedInbox, user, notifications, setNotifications }) {
     const [secondUser, setSecondUser] = useState({});
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
 
-    // useEffect(function() {
-    //     socket.on('hello', function() {
-    //         console.log('hello')
-    //     })
-    // }, [])
+    useEffect(function() {
+
+        (async function() {
+            if (selectedInbox) {
+                const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
+                setMessages(inboxMessages);
+                socket.emit('inbox', selectedInbox);
+            }
+        })();
+
+        }, [selectedInbox])
+
 
     useEffect(function() {
         socket.on('receive-message', function(message, secondUser, selectedInbox) {
             if(message.inboxId === selectedInbox._id) {
-                // console.log('message received')
                 setMessages([...messages, message])
             }
         })
@@ -40,63 +46,56 @@ export default function InboxSection({ selectedInbox, user }) {
         })();
     }, [selectedInbox, user])
 
-    useEffect(function() {
-
-    (async function() {
-        if (selectedInbox) {
-            const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
-            setMessages(inboxMessages);
-            socket.emit('inbox', selectedInbox);
-        }
-    })();
-
-    }, [selectedInbox])
-
-    function handleDataReceived(data) {
-        console.log(data);
-      }
-
     function handleChange(e) {
         setText(e);
     }
 
     async function handleClick(e) {
 
-        const message = {
-            senderId: user,
-            content: text,
-            inboxId: selectedInbox._id
+        if(text) {
+
+            const message = {
+                senderId: user,
+                content: text,
+                inboxId: selectedInbox._id
+            }
+
+            const newMessage = await messagesAPI.createMessage(message);
+            socket.emit('send-message', newMessage, secondUser, selectedInbox)
+            setText('');
         }
 
-        const newMessage = await messagesAPI.createMessage(message);
-        // setMessages([...messages, newMessage]);
-        socket.emit('send-message', newMessage, secondUser, selectedInbox)
-        setText('');
+    }
+
+
+    function handleEnter() {
+        handleClick();
     }
 
     return(
         <div className="middle-div">
             <div className="messages-list">
             {selectedInbox ?
-            <>
-                {messages.length ?
-                <MessageList messages={messages} user={user} selectedInbox={selectedInbox} secondUser={secondUser}/>
-                :
-                <h1>Type below to start chatting</h1>
-                }
-            </>
+                <div>
+                    {messages.length ?
+                    <MessageList messages={messages} user={user} selectedInbox={selectedInbox} secondUser={secondUser}/>
+                    :
+                    <h1>Type below to start chatting</h1>
+                    }
+                </div>
             :
                 <h1>Select a chat</h1>
             }
             </div>
             {selectedInbox ?
                 <div className="input-div">
-                    <InputEmoji
-                    className="input"
-                    value={text}
-                    onChange={handleChange}
-                    />
-                    <button onClick={handleClick}type="submit"><IoSendOutline /></button>
+                        <InputEmoji
+                        onEnter={handleEnter}
+                        className="input"
+                        value={text}
+                        onChange={handleChange}
+                        />
+                        <button onClick={handleClick} type="submit"><IoSendOutline /></button>
                 </div>
             :
                 <div></div>

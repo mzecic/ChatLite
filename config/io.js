@@ -17,12 +17,11 @@ function init(http) {
         socket.on('inbox', function(selectedInbox) {
             socket.join(selectedInbox._id);
             socket.on('send-message', function(message, secondUser, selectedInbox) {
-                // socket.join(selectedInbox._id)
                 io.to(selectedInbox._id).emit('receive-message', message, secondUser, selectedInbox)
             })
         })
 
-        
+
 
         // socket.on('text', function(text, selectedInbox) {
         //     io.to(selectedInbox).emit('receive-text', text)

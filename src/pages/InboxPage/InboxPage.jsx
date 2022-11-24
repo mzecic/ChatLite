@@ -12,7 +12,8 @@ export default function InboxPage({ user }) {
     const [selectedInbox, setSelectedInbox] = useState(null);
     const [users, setUsers] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState([]);
-    const scrollDown = useRef();
+    const [notifications, setNotifications] = useState([]);
+
 
     useEffect(function() {
         (async function() {
@@ -49,10 +50,10 @@ export default function InboxPage({ user }) {
             <>
                 <ChatList inboxes={inboxes} user={user} handleInboxClick={handleInboxClick}/>
                 <InboxSection
-                ref={scrollDown}
+                notifications={notifications}
                 selectedInbox={selectedInbox}
                 user={user}/>
-                <UserList allUsers={allUsers}/>
+                <UserList users={users}/>
             </>
             :
             <>
