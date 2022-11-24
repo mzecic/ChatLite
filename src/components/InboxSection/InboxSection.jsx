@@ -31,6 +31,7 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
     useEffect(function() {
         socket.on('receive-message', function(message, secondUser, selectedInbox) {
             if(message.inboxId === selectedInbox._id) {
+                messages.pop(messages.length - 1);
                 setMessages([...messages, message])
             }
         })
@@ -61,7 +62,8 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
             }
 
             const newMessage = await messagesAPI.createMessage(message);
-            socket.emit('send-message', newMessage, secondUser, selectedInbox)
+            setMessages([...messages, newMessage]);
+            socket.emit('send-message', newMessage, secondUser, selectedInbox);
             setText('');
         }
 

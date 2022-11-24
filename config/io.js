@@ -1,3 +1,5 @@
+const { on } = require('../models/user');
+
 let io;
 
 module.exports = {
@@ -8,11 +10,29 @@ module.exports = {
 function init(http) {
     io = require('socket.io')(http);
 
+    let onlineUsers = [];
+
     io.on('connection', function(socket) {
         console.log('Client socketed connected');
 
     // Other message listeners below here (stay inside of this 'connection' callback)
 
+        socket.on('register-user', function(newUser) {
+            if(!onlineUsers.some(user => user._id === newUser._id)) {
+                onlineUsers.push({
+                    userId: newUser._id,
+                    socketId: socket.id
+                })
+            }
+
+            io.emit('get-users', onlineUsers);
+        })
+
+        socket.on('disconnect', function() {
+            onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
+            console.log('User Disconnected', onlineUsers);
+            io.emit('get-users', onlineUsers);
+        })
 
         socket.on('inbox', function(selectedInbox) {
             socket.join(selectedInbox._id);
