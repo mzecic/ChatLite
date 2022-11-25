@@ -14,6 +14,7 @@ export default function InboxPage({ user }) {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [notifications, setNotifications] = useState([]);
     const usersOnline = useRef([]);
+    const [socketConnected, setSocketConnected] = useState(false);
 
 
     useEffect(() => {
@@ -53,6 +54,12 @@ export default function InboxPage({ user }) {
                             return user;
                         }
                     }).filter(user => user !== undefined))
+
+                })
+                socket.emit('setup', user);
+                console.log(user._id);
+                socket.on('connection', function() {
+                    setSocketConnected(true);
                 })
         })();
     }, [])

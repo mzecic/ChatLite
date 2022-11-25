@@ -35,24 +35,25 @@ function init(http) {
             io.emit('get-users', onlineUsers);
         })
 
-
-        socket.on('inbox', function(selectedInbox) {
-            socket.join(selectedInbox);
-            socket.on('send-message', function(message, secondUser, selectedInbox) {
-                io.to(selectedInbox._id).emit('receive-message', message, secondUser, selectedInbox)
-            })
+        socket.on('setup', function(user) {
+            socket.join(user._id);
+            socket.emit('connected');
         })
 
+        socket.on('join-chat', function(room) {
+            socket.join(room);
+            console.log('User Joined Room', room);
+        })
 
-        // socket.on('text', function(text, selectedInbox) {
-        //     io.to(selectedInbox).emit('receive-text', text)
-        // });
+        socket.on('new-message', function(newMessage, secondUser, selectedInbox, previousMessages) {
+            let inbox = newMessage.inboxId;
 
+            selectedInbox.users.forEach(user => {
+                if(user === newMessage.senderId) return;
 
-        // socket.on('send-message', function(message, secondUser, selectedInbox) {
-        //     socket.join(selectedInbox._id)
-        //     io.to(selectedInbox._id).emit('receive-message', message, secondUser, selectedInbox)
-        // })
+                socket.in(user).emit('message-receive', newMessage, previousMessages);
+            })
+        })
 
     });
 }
