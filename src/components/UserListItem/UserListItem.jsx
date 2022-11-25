@@ -1,5 +1,7 @@
-export default function UserListItem() {
+export default function UserListItem({ user }) {
     return(
-        <h2>User</h2>
+        <div>
+           {user.name}
+        </div>
     )
 }

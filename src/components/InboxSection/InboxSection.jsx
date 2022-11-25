@@ -15,13 +15,16 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
 
+
+
+
     useEffect(function() {
 
         (async function() {
             if (selectedInbox) {
                 const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
                 setMessages(inboxMessages);
-                socket.emit('inbox', selectedInbox);
+                socket.emit('inbox', selectedInbox._id);
             }
         })();
 
@@ -31,11 +34,12 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
     useEffect(function() {
         socket.on('receive-message', function(message, secondUser, selectedInbox) {
             if(message.inboxId === selectedInbox._id) {
-                messages.pop(messages.length - 1);
-                setMessages([...messages, message])
+                const messagesTemp = [...messages]
+                // messagesTemp.pop(messages.length - 1);
+                setMessages([...messagesTemp, message]);
             }
         })
-    }, [messages])
+    },)
 
     useEffect(function() {
         (async function() {
@@ -62,8 +66,8 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
             }
 
             const newMessage = await messagesAPI.createMessage(message);
-            setMessages([...messages, newMessage]);
             socket.emit('send-message', newMessage, secondUser, selectedInbox);
+            // setMessages([...messages, newMessage]);
             setText('');
         }
 

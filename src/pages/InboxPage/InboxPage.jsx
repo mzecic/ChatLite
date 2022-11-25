@@ -5,26 +5,46 @@ import * as usersAPI from '../../utilities/users-api';
 import ChatList from '../../components/ChatList/ChatList';
 import UserList from '../../components/UserList/UserList';
 import InboxSection from '../../components/InboxSection/InboxSection';
-
+import socket from '../../utilities/socket';
 
 export default function InboxPage({ user }) {
     const [inboxes, setInboxes] = useState([]);
     const [selectedInbox, setSelectedInbox] = useState(null);
-    const [users, setUsers] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [notifications, setNotifications] = useState([]);
+    const usersOnline = useRef([]);
+
+
 
 
     useEffect(function() {
         (async function() {
-            try {
                 const allUsers = await usersAPI.getAllUsers();
-                setUsers(allUsers);
-            } catch(err) {
-                console.log(err);
-            }
+                console.log(allUsers);
+                setAllUsers(allUsers);
+                console.log(allUsers)
+                socket.emit('register-user', user._id, allUsers);
+                socket.on('get-users', function(users) {
+                    usersOnline.current = [...users]
+                    setOnlineUsers(usersOnline.current);
+                    console.log(usersOnline)
+                    const onlineUsersIds = usersOnline.current.map(user => user.userId)
+                    // const onlineUsersObj = allUsers.map(user => {
+                    //     if(onlineUsersIds.includes(user._id)) {
+                    //         return user;
+                    //     }
+                    // }).filter(user => user !== undefined)
+                    // console.log(onlineUsersObj);
+                    setOnlineUsers(allUsers.map(user => {
+                        if(onlineUsersIds.includes(user._id)) {
+                            return user;
+                        }
+                    }).filter(user => user !== undefined))
+                })
         })();
     }, [])
+
 
     useEffect(function() {
         (async function() {
@@ -53,7 +73,7 @@ export default function InboxPage({ user }) {
                 notifications={notifications}
                 selectedInbox={selectedInbox}
                 user={user}/>
-                <UserList users={users}/>
+                <UserList allUsers={allUsers} onlineUsers={onlineUsers} setAllUsers={setAllUsers} />
             </>
             :
             <>
