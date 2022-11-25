@@ -14,7 +14,7 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
     const [secondUser, setSecondUser] = useState({});
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
-    const messagesBackup = useRef();
+
 
 
     let selectedInboxBackup = null;
