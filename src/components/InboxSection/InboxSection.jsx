@@ -5,22 +5,41 @@ import * as messagesAPI from '../../utilities/messages-api';
 import MessageList from '../MessageList/MessageList';
 import InputEmoji from "react-input-emoji";
 import { IoSendOutline } from 'react-icons/io5';
+import socket from '../../utilities/socket';
 
 
 
 
-export default function InboxSection({ selectedInbox, user, setMessageForSocket, messageFromSocket }) {
+export default function InboxSection({ selectedInbox, user, notifications, setNotifications }) {
     const [secondUser, setSecondUser] = useState({});
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
 
-    useEffect(function() {
-        if(messageFromSocket !== null && messageFromSocket.inboxId === selectedInbox._id){
-            setMessages([...messages, messageFromSocket])
-        }
-        console.log(messages)
-    }, [messageFromSocket])
 
+
+
+    useEffect(function() {
+
+        (async function() {
+            if (selectedInbox) {
+                const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
+                setMessages(inboxMessages);
+                socket.emit('inbox', selectedInbox._id);
+            }
+        })();
+
+        }, [selectedInbox])
+
+
+    useEffect(function() {
+        socket.on('receive-message', function(message, secondUser, selectedInbox) {
+            if(message.inboxId === selectedInbox._id) {
+                const messagesTemp = [...messages]
+                // messagesTemp.pop(messages.length - 1);
+                setMessages([...messagesTemp, message]);
+            }
+        })
+    },)
 
     useEffect(function() {
         (async function() {
@@ -32,61 +51,62 @@ export default function InboxSection({ selectedInbox, user, setMessageForSocket,
         })();
     }, [selectedInbox, user])
 
-    useEffect(function() {
-
-    (async function() {
-        if (selectedInbox) {
-            const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
-            setMessages(inboxMessages);
-        }
-    })();
-
-    }, [selectedInbox])
-
-
     function handleChange(e) {
         setText(e);
     }
 
     async function handleClick(e) {
-        e.preventDefault();
-        const message = {
-            senderId: user,
-            content: text,
-            inboxId: selectedInbox._id
+
+        if(text) {
+
+            const message = {
+                senderId: user,
+                content: text,
+                inboxId: selectedInbox._id
+            }
+
+            const newMessage = await messagesAPI.createMessage(message);
+            socket.emit('send-message', newMessage, secondUser, selectedInbox);
+            // setMessages([...messages, newMessage]);
+            setText('');
         }
 
-        const result = await messagesAPI.createMessage(message);
-        setMessages([...messages, result]);
-        setText('');
-
-        const receiverId = selectedInbox.users.find(id => id !== user._id);
-        setMessageForSocket({...message, receiverId});
     }
 
+
+    function handleEnter() {
+        handleClick();
+    }
 
     return(
         <div className="middle-div">
             <div className="messages-list">
             {selectedInbox ?
-            <>
-                {messages.length ?
-                <MessageList messages={messages} user={user} selectedInbox={selectedInbox} secondUser={secondUser}/>
-                :
-                <h1>Type below to start chatting</h1>
-                }
-            </>
+                <div>
+                    {messages.length ?
+                    <MessageList messages={messages} user={user} selectedInbox={selectedInbox} secondUser={secondUser}/>
+                    :
+                    <h1>Type below to start chatting</h1>
+                    }
+                </div>
             :
                 <h1>Select a chat</h1>
             }
             </div>
-            <div className="input-div">
-                <InputEmoji
-                value={text}
-                onChange={handleChange}
-                />
-                <button onClick={handleClick}type="submit"><IoSendOutline /></button>
-            </div>
+            {selectedInbox ?
+                <div className="input-div">
+                        <InputEmoji
+                        onEnter={handleEnter}
+                        className="input"
+                        value={text}
+                        onChange={handleChange}
+                        />
+                        <button onClick={handleClick} type="submit"><IoSendOutline /></button>
+                </div>
+            :
+                <div></div>
+            }
+
         </div>
     )
 }
