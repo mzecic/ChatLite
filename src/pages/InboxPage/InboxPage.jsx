@@ -14,19 +14,8 @@ export default function InboxPage({ user }) {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [notifications, setNotifications] = useState([]);
     const usersOnline = useRef([]);
+    const [socketConnected, setSocketConnected] = useState(false);
 
-
-    useEffect(() => {
-        socket.current.on('get-message', function(message) {
-            setMessageFromSocket(message)
-        })
-    }, [])
-
-    useEffect(() => {
-        if(messageForSocket !== null) {
-            socket.current.emit('send-message', messageForSocket)
-        }
-    },[messageForSocket]);
 
 
 
@@ -42,17 +31,17 @@ export default function InboxPage({ user }) {
                     setOnlineUsers(usersOnline.current);
                     console.log(usersOnline)
                     const onlineUsersIds = usersOnline.current.map(user => user.userId)
-                    // const onlineUsersObj = allUsers.map(user => {
-                    //     if(onlineUsersIds.includes(user._id)) {
-                    //         return user;
-                    //     }
-                    // }).filter(user => user !== undefined)
-                    // console.log(onlineUsersObj);
                     setOnlineUsers(allUsers.map(user => {
                         if(onlineUsersIds.includes(user._id)) {
                             return user;
                         }
                     }).filter(user => user !== undefined))
+
+                })
+                socket.emit('setup', user);
+                console.log(user._id);
+                socket.on('connection', function() {
+                    setSocketConnected(true);
                 })
         })();
     }, [])

@@ -17,6 +17,8 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
 
 
 
+    let selectedInboxBackup = null;
+
 
     useEffect(function() {
 
@@ -24,22 +26,26 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
             if (selectedInbox) {
                 const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
                 setMessages(inboxMessages);
-                socket.emit('inbox', selectedInbox._id);
+                socket.emit('join-chat', selectedInbox._id);
+                selectedInboxBackup = selectedInbox;
             }
         })();
 
-        }, [selectedInbox])
+    }, [selectedInbox])
 
 
     useEffect(function() {
-        socket.on('receive-message', function(message, secondUser, selectedInbox) {
-            if(message.inboxId === selectedInbox._id) {
-                const messagesTemp = [...messages]
-                // messagesTemp.pop(messages.length - 1);
-                setMessages([...messagesTemp, message]);
+        socket.on('message-receive', function(newMessage, previousMessages) {
+            if(!selectedInboxBackup || selectedInboxBackup._id !== newMessage.inboxId) {
+                //notification
+            } else {
+                console.log(previousMessages);
+                setMessages([...previousMessages, newMessage]);
             }
         })
-    },)
+    })
+
+
 
     useEffect(function() {
         (async function() {
@@ -66,9 +72,12 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
             }
 
             const newMessage = await messagesAPI.createMessage(message);
-            socket.emit('send-message', newMessage, secondUser, selectedInbox);
-            // setMessages([...messages, newMessage]);
+            setMessages([...messages, newMessage]);
+            const previousMessages = messages;
+            console.log(messages);
+            socket.emit('new-message', newMessage, secondUser, selectedInbox, previousMessages);
             setText('');
+
         }
 
     }
