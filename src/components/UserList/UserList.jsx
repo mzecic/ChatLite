@@ -10,7 +10,7 @@ export default function UserList({ onlineUsers }) {
     })
 
     return(
-        <div>
+        <div className="right-div">
             <h2>{onlineUsersRender}</h2>
             <h1>hello</h1>
         </div>
