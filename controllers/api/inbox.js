@@ -6,19 +6,16 @@ module.exports = {
     index,
     show,
     getSecondUser,
+    delete: deleteInbox,
 }
 
 async function create(req, res) {
     const newInbox = new Inbox({
-        users: [req.body.senderId, req.body.receiverId]
+        users: [req.body[0][0], req.body[0][1]]
     });
-
-    try {
         const result = await newInbox.save();
         res.json(result)
-    } catch(err) {
-        res.status(500).json(err)
-    }
+
 }
 
 async function index(req, res) {
@@ -51,4 +48,10 @@ async function getSecondUser(req, res) {
         console.log(err)
         res.status(500).json(err);
     }
+}
+
+async function deleteInbox(req, res) {
+    const result = await Inbox.findOneAndDelete({ _id: req.params.id });
+    res.json(result);
+
 }

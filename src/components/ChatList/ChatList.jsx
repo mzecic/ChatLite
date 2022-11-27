@@ -1,7 +1,10 @@
 import './ChatList.css';
 import ChatListItem from '../ChatListtem/ChatListItem';
 
-export default function ChatList({ inboxes, user, handleInboxClick }) {
+export default function ChatList({ inboxes, user, handleInboxClick, handleRemoveInbox }) {
+
+
+
 
         const userInboxes = inboxes.map((inbox) => {
                 return <ChatListItem
@@ -9,6 +12,7 @@ export default function ChatList({ inboxes, user, handleInboxClick }) {
                 user={user}
                 key={inbox._id}
                 handleInboxClick={handleInboxClick}
+                handleRemoveInbox={handleRemoveInbox}
                 />
             })
 

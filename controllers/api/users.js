@@ -6,7 +6,8 @@ module.exports = {
     create,
     login,
     checkToken,
-    index
+    index,
+    chatUsers,
 }
 
 async function create(req, res) {
@@ -38,6 +39,14 @@ function checkToken(req, res) {
     res.json(req.exp)
 }
 
+async function index(req, res) {
+    const users = await User.find({});
+    res.json(users);
+}
+
+async function chatUsers(req, res) {
+    const users = await User.find({})
+}
 
 /*-- Helper Functions --*/
 function createJWT(user) {
@@ -46,9 +55,4 @@ function createJWT(user) {
         process.env.SECRET,
         { expiresIn: '24h' }
     )
-}
-
-async function index(req, res) {
-    const users = await User.find({});
-    res.json(users);
 }

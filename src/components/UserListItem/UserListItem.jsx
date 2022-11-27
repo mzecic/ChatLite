@@ -1,9 +1,9 @@
 import './UserListItem.css';
 
-export default function UserListItem({ user }) {
+export default function UserListItem({ user, handleUserClick }) {
     return(
-        <div className="user-item">
-           {user.name}
+        <div onClick={handleUserClick} className="user-item" id={user._id}>
+            <p className="user-item-content">{user.name}</p>
         </div>
     )
 }

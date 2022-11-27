@@ -6,6 +6,7 @@ import ChatList from '../../components/ChatList/ChatList';
 import UserList from '../../components/UserList/UserList';
 import InboxSection from '../../components/InboxSection/InboxSection';
 import socket from '../../utilities/socket';
+import { propTypes } from 'react-input-emoji';
 
 export default function InboxPage({ user }) {
     const [inboxes, setInboxes] = useState([]);
@@ -15,6 +16,7 @@ export default function InboxPage({ user }) {
     const [notifications, setNotifications] = useState([]);
     const usersOnline = useRef([]);
     const [socketConnected, setSocketConnected] = useState(false);
+    const [inboxToRemove, setInboxToRemove] = useState(null);
 
 
 
@@ -22,15 +24,14 @@ export default function InboxPage({ user }) {
     useEffect(function() {
         (async function() {
                 const allUsers = await usersAPI.getAllUsers();
-                console.log(allUsers);
+
                 setAllUsers(allUsers);
-                console.log(allUsers)
+
                 socket.emit('register-user', user._id, allUsers);
                 socket.on('get-users', function(users) {
                     usersOnline.current = [...users]
-                    setOnlineUsers(usersOnline.current);
-                    console.log(usersOnline)
-                    const onlineUsersIds = usersOnline.current.map(user => user.userId)
+                    setOnlineUsers(users);
+                    const onlineUsersIds = users.map(user => user.userId)
                     setOnlineUsers(allUsers.map(user => {
                         if(onlineUsersIds.includes(user._id)) {
                             return user;
@@ -39,13 +40,18 @@ export default function InboxPage({ user }) {
 
                 })
                 socket.emit('setup', user);
-                console.log(user._id);
                 socket.on('connection', function() {
                     setSocketConnected(true);
                 })
         })();
-    }, [])
+    }, [user])
 
+    useEffect(function() {
+        socket.on('update-inbox-list', function(newInbox) {
+            setInboxes([...inboxes, newInbox]);
+            console.log(newInbox);
+        })
+    }, [inboxes]);
 
     useEffect(function() {
         (async function() {
@@ -59,22 +65,67 @@ export default function InboxPage({ user }) {
       })();
       }, [user])
 
+    async function handleRemoveInbox(e) {
+        const removeInbox = inboxes.filter(inbox => {
+            return inbox._id === e.target.classList.value
+        })
+        const result = await inboxAPI.removeInbox(removeInbox);
+        setInboxToRemove(result);
+        console.log(result)
+        const newInboxes = [...inboxes];
+        newInboxes.pop(result);
+        setInboxes([...newInboxes]);
+        setSelectedInbox(null);
+    }
+
       function handleInboxClick(e, inbox) {
         // console.log(inbox)
         // console.log(e.target.innerText);
         setSelectedInbox(inbox)
       }
 
+
+      async function handleUserClick(e) {
+        const clickedUser = allUsers.filter(user => user._id === e.target.getAttribute('id'));
+        const newInbox = await inboxAPI.createInbox([user._id, clickedUser[0]._id]);
+        setInboxes([...inboxes, newInbox]);
+        setSelectedInbox(newInbox);
+        socket.emit('new-inbox', newInbox, clickedUser);
+
+
+        // inboxes.forEach(inbox => {
+        //     if(inbox.users.includes(clickedUsers.))
+        // })
+        // for (let i = 0; i < clickedUsers.length; i++) {
+        //     for (let j = 0; j < inboxes.length; j++) {
+        //         if(inboxes[j].users.includes(clickedUsers[i]._id)) {
+        //             console.log(clickedUsers[i])
+        //             setSelectedInbox(inboxes[j])
+        //         } else {
+        //             console.log(clickedUsers[i]._id, user._id)
+
+        //             setSelectedInbox(newInbox)
+        //         }
+        //     }
+
+        // }
+      }
+
     return (
         <div className="inbox-div">
-            {inboxes.length ?
+            {inboxes.length || user ?
             <>
-                <ChatList inboxes={inboxes} user={user} handleInboxClick={handleInboxClick}/>
+                {inboxes.length ?
+                    <ChatList inboxes={inboxes} user={user} handleInboxClick={handleInboxClick} handleRemoveInbox={handleRemoveInbox}/>
+                :
+                    <p>This is where all your current inbox will appear</p>
+                }
+
                 <InboxSection
                 notifications={notifications}
                 selectedInbox={selectedInbox}
                 user={user}/>
-                <UserList allUsers={allUsers} onlineUsers={onlineUsers} setAllUsers={setAllUsers} />
+                <UserList allUsers={allUsers} onlineUsers={onlineUsers} setAllUsers={setAllUsers} handleUserClick={handleUserClick} currentUser={user}/>
             </>
             :
             <>
