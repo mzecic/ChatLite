@@ -99,7 +99,10 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
                     }
                 </div>
             :
-                <h1>Select a chat</h1>
+            <>
+                <h1>or a new user to chat with</h1>
+                <h1>Select an existing chat</h1>
+            </>
             }
             </div>
             {selectedInbox ?

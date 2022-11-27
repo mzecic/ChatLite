@@ -16,3 +16,7 @@ export function checkToken() {
 export async function getAllUsers() {
     return sendRequest(`${BASE_URL}/all`);
 }
+
+export async function getExistingChatUsers() {
+    return sendRequest(`${BASE_URL}/chatusers`)
+}

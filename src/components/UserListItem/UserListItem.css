@@ -8,3 +8,7 @@
 .user-item-content {
     z-index: -1;
 }
+
+.hidden {
+    display: none;
+}

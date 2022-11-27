@@ -26,7 +26,7 @@ function init(http) {
                 })
             }
             io.emit('get-users', onlineUsers);
-            // console.log(onlineUsers);
+            console.log(onlineUsers);
         })
 
         socket.on('disconnect', function() {
@@ -46,13 +46,17 @@ function init(http) {
         })
 
         socket.on('new-message', function(newMessage, secondUser, selectedInbox, previousMessages) {
-            let inbox = newMessage.inboxId;
 
             selectedInbox.users.forEach(user => {
                 if(user === newMessage.senderId) return;
 
                 socket.in(user).emit('message-receive', newMessage, previousMessages);
             })
+        })
+
+        socket.on('new-inbox', function(newInbox, clickedUser) {
+            socket.in(clickedUser._id).emit('update-inbox-list', newInbox);
+            console.log(clickedUser);
         })
 
     });

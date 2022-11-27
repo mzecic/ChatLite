@@ -1,18 +1,17 @@
 import './UserList.css';
 import UserListItem from '../UserListItem/UserListItem';
 
-export default function UserList({ onlineUsers }) {
+export default function UserList({ onlineUsers, handleUserClick, currentUser }) {
 
     const onlineUsersRender = onlineUsers.map(user => {
-
-        return <UserListItem user={user} key={user._id}/>
+        if(user._id === currentUser._id) return;
+        return <UserListItem user={user} key={user._id} handleUserClick={handleUserClick}/>
 
     })
 
     return(
         <div className="right-div">
-            <h2>{onlineUsersRender}</h2>
-            <h1>hello</h1>
+            {onlineUsersRender}
         </div>
     )
 }
