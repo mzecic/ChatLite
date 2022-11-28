@@ -37,10 +37,11 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
         socket.on('message-receive', function(newMessage, previousMessages) {
             if(!selectedInboxBackup || selectedInboxBackup._id !== newMessage.inboxId) {
                 //notifications
+                setLastMessage(newMessage);
             } else {
                 console.log(previousMessages);
                 setMessages([...previousMessages, newMessage]);
-                setLastMessage(newMessage)
+                // setLastMessage(newMessage);
             }
         })
     })
