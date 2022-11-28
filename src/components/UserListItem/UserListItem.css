@@ -1,12 +1,14 @@
 .user-item {
     width: 95%;
     height: 70px;
-    border: 1px solid black;
-    margin: 10px auto;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 1.25rem;
+    background-color: white;
+    margin: 15px auto;
 }
 
 .user-item-content {
-    z-index: -1;
+    z-index: 0;
 }
 
 .hidden {

@@ -4,7 +4,7 @@ import * as inboxAPI from '../../utilities/inbox-api';
 import * as messagesAPI from '../../utilities/messages-api';
 import MessageList from '../MessageList/MessageList';
 import InputEmoji from "react-input-emoji";
-import { IoSendOutline } from 'react-icons/io5';
+import { IoSendOutline, IoChevronForwardSharp } from 'react-icons/io5';
 import socket from '../../utilities/socket';
 
 
@@ -113,7 +113,7 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
                         value={text}
                         onChange={handleChange}
                         />
-                        <button onClick={handleClick} className="send-btn" type="submit"><IoSendOutline /></button>
+                        <button onClick={handleClick} className="send-btn" type="submit">Send</button>
                 </div>
             :
                 <div></div>
