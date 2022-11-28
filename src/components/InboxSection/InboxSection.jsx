@@ -10,7 +10,7 @@ import socket from '../../utilities/socket';
 
 
 
-export default function InboxSection({ selectedInbox, user, notifications, setNotifications, messages, setMessages }) {
+export default function InboxSection({ selectedInbox, user, notifications, setNotifications, messages, setMessages, setLastMessage }) {
     const [secondUser, setSecondUser] = useState({});
     const [text, setText] = useState('');
 
@@ -36,11 +36,11 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
     useEffect(function() {
         socket.on('message-receive', function(newMessage, previousMessages) {
             if(!selectedInboxBackup || selectedInboxBackup._id !== newMessage.inboxId) {
-                //notification
-
+                //notifications
             } else {
                 console.log(previousMessages);
                 setMessages([...previousMessages, newMessage]);
+                setLastMessage(newMessage)
             }
         })
     })
@@ -76,6 +76,7 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
             const previousMessages = messages;
             console.log(messages);
             socket.emit('new-message', newMessage, secondUser, selectedInbox, previousMessages);
+            setLastMessage(newMessage)
             setText('');
 
         }

@@ -4,9 +4,8 @@ import * as messagesAPI from '../../utilities/messages-api';
 import { useState, useEffect, useRef } from 'react';
 
 
-export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox }, ref) {
+export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox, lastMessage, setLastMessage }, ref) {
     const [secondUser, setSecondUser] = useState({});
-    const [lastMessage, setLastMessage] = useState('');
     const [inboxMessages, setInboxMessages] = useState([]);
 
     useEffect(function() {
@@ -39,6 +38,8 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
             <span className="chat-item-content">{secondUser.name}</span><button onClick={(e) => handleRemoveInbox(e)} className={ `hidden ${inbox._id}`} id="delete-chat" type="submit">X</button>
             {lastMessage ?
             <>
+            {lastMessage.inboxId === inbox._id ?
+            <>
                 {lastMessage.senderId === user._id ?
                     <span className="last-message">You: {lastMessage.content.slice(0, 11)}...</span>
                 :
@@ -48,6 +49,10 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
             :
             <span></span>
             }
+             </>
+            :
+            <p></p>
+        }
         </div>
     )
 }
