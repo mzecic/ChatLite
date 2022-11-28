@@ -16,6 +16,7 @@ export default function App() {
       { user ?
         <>
           <NavBar user={user} setUser={setUser} />
+          <InboxPage user={user}/>
           <Routes>
             <Route path="/orders/new" element={<NewOrderPage />} />
             <Route path="/orders" element={<OrderHistoryPage />} />

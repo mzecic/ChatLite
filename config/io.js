@@ -55,8 +55,8 @@ function init(http) {
         })
 
         socket.on('new-inbox', function(newInbox, clickedUser) {
-            socket.in(clickedUser._id).emit('update-inbox-list', newInbox);
-            console.log(clickedUser);
+            socket.in(clickedUser[0]._id).emit('update-inbox', newInbox);
+            console.log("this is: ", clickedUser[0]._id);
         })
 
     });

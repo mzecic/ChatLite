@@ -1,9 +1,9 @@
 import './ChatListItem.css';
 import * as inboxAPI from '../../utilities/inbox-api';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 
-export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox }) {
+export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox }, ref) {
     const [secondUser, setSecondUser] = useState({});
 
     useEffect(function() {
@@ -23,8 +23,9 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
     }
 
     return(
-        <div onMouseLeave={(e => handleMouseLeave)} onMouseEnter={(e) => handleMouseEnter(e)} onClick={(e) => handleInboxClick(e, inbox)} className="chat-item">
-            <p className="chat-item-content">{secondUser.name}</p><button onClick={(e) => handleRemoveInbox(e)} className={inbox._id} id="delete-chat" type="submit">-</button>
+        <div onMouseLeave={(e => handleMouseLeave(e))} onMouseEnter={(e) => handleMouseEnter(e)} onClick={(e) => handleInboxClick(e, inbox)} className="chat-item">
+            <span className="chat-item-content">{secondUser.name}</span><button onClick={(e) => handleRemoveInbox(e)} className={ `hidden ${inbox._id}`} id="delete-chat" type="submit">-</button>
+            <p></p>
         </div>
     )
 }
