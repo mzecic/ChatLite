@@ -10,9 +10,8 @@ import socket from '../../utilities/socket';
 
 
 
-export default function InboxSection({ selectedInbox, user, notifications, setNotifications }) {
+export default function InboxSection({ selectedInbox, user, notifications, setNotifications, messages, setMessages }) {
     const [secondUser, setSecondUser] = useState({});
-    const [messages, setMessages] = useState([]);
     const [text, setText] = useState('');
 
 
@@ -38,7 +37,7 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
         socket.on('message-receive', function(newMessage, previousMessages) {
             if(!selectedInboxBackup || selectedInboxBackup._id !== newMessage.inboxId) {
                 //notification
-                
+
             } else {
                 console.log(previousMessages);
                 setMessages([...previousMessages, newMessage]);
@@ -114,7 +113,7 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
                         value={text}
                         onChange={handleChange}
                         />
-                        <button onClick={handleClick} type="submit"><IoSendOutline /></button>
+                        <button onClick={handleClick} className="send-btn" type="submit"><IoSendOutline /></button>
                 </div>
             :
                 <div></div>

@@ -2,6 +2,7 @@ import './InboxPage.css';
 import { useState, useEffect, useRef } from 'react';
 import * as inboxAPI from '../../utilities/inbox-api';
 import * as usersAPI from '../../utilities/users-api';
+import * as messagesAPI from '../../utilities/messages-api';
 import ChatList from '../../components/ChatList/ChatList';
 import UserList from '../../components/UserList/UserList';
 import InboxSection from '../../components/InboxSection/InboxSection';
@@ -10,6 +11,7 @@ import { propTypes } from 'react-input-emoji';
 
 export default function InboxPage({ user }) {
     const [inboxes, setInboxes] = useState([]);
+    const [messages, setMessages] = useState([]);
     const [selectedInbox, setSelectedInbox] = useState(null);
     const [allUsers, setAllUsers] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState([]);
@@ -18,8 +20,6 @@ export default function InboxPage({ user }) {
     const [socketConnected, setSocketConnected] = useState(false);
     const [inboxToRemove, setInboxToRemove] = useState(null);
     const [clickedUser, setClickedUser] = useState(null);
-
-
 
 
     useEffect(function() {
@@ -51,19 +51,13 @@ export default function InboxPage({ user }) {
         socket.on('update-inbox', function(newInbox) {
             console.log(newInbox);
             setInboxes([...inboxes, newInbox]);
-
         })
     }, [inboxes]);
 
     useEffect(function() {
         (async function() {
-            try {
                 const result = await inboxAPI.getInboxes(user._id);
                 setInboxes(result);
-            } catch(err) {
-                console.log(err);
-            }
-
       })();
       }, [user])
 
@@ -109,6 +103,8 @@ export default function InboxPage({ user }) {
                 }
 
                 <InboxSection
+                messages={messages}
+                setMessages={setMessages}
                 notifications={notifications}
                 selectedInbox={selectedInbox}
                 user={user}/>
