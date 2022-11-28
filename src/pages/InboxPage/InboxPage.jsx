@@ -13,6 +13,7 @@ export default function InboxPage({ user }) {
     const [inboxes, setInboxes] = useState([]);
     const [messages, setMessages] = useState([]);
     const [selectedInbox, setSelectedInbox] = useState(null);
+    const [lastMessage, setLastMessage] = useState('');
     const [allUsers, setAllUsers] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [notifications, setNotifications] = useState([]);
@@ -97,12 +98,13 @@ export default function InboxPage({ user }) {
             {inboxes.length || user ?
             <>
                 {inboxes.length ?
-                    <ChatList inboxes={inboxes} user={user} handleInboxClick={handleInboxClick} handleRemoveInbox={handleRemoveInbox}/>
+                    <ChatList lastMessage={lastMessage} setLastMessage={setLastMessage} inboxes={inboxes} user={user} handleInboxClick={handleInboxClick} handleRemoveInbox={handleRemoveInbox}/>
                 :
                     <div className="left-div">This is where your current chats will show</div>
                 }
 
                 <InboxSection
+                setLastMessage={setLastMessage}
                 messages={messages}
                 setMessages={setMessages}
                 notifications={notifications}
