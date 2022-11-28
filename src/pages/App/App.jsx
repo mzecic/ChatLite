@@ -20,7 +20,7 @@ export default function App() {
           <Routes>
             <Route path="/orders/new" element={<NewOrderPage />} />
             <Route path="/orders" element={<OrderHistoryPage />} />
-            <Route path="/inbox" element={<InboxPage user={user}/>}/>
+            {/* <Route path="/inbox" element={<InboxPage user={user}/>}/> */}
           </Routes>
         </>
         :

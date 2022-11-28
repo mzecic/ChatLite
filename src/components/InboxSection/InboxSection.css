@@ -34,11 +34,11 @@
 }
 
 .send-btn {
-    border-radius: 50%;
-    border: 2.5px solid grey;
-    width: 26.5px;
-    height: 26.5px;
-    margin: 11.25px 10px;
+    border-radius: 1.25rem;
+    border: 2px solid rgb(151, 151, 151);
+    width: 80px;
+    height: 30px;
+    margin: 10px 10px;
 }
 
 .send-btn:hover {
