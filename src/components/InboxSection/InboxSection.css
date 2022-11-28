@@ -1,7 +1,8 @@
 .middle-div {
     grid-column: 2/2;
     height: 100vh;
-    border: 1px solid black;
+    border: 1px solid rgb(176, 176, 176);
+    border-radius: 1.25rem;
     margin: 15px;
     display: flex;
     flex-direction: column;
@@ -30,4 +31,17 @@
     width: 100%;
     gap: none;
     display: block;
+}
+
+.send-btn {
+    border-radius: 50%;
+    border: 2.5px solid grey;
+    width: 26.5px;
+    height: 26.5px;
+    margin: 11.25px 10px;
+}
+
+.send-btn:hover {
+    cursor: pointer;
+    background-color: rgba(0, 132, 255, 0.502);
 }
