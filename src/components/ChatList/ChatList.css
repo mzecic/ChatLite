@@ -1,6 +1,8 @@
 .left-div {
     grid-column: 1/1;
     height: 100vh;
-    border: 1px solid black;
+    border: 1px solid rgb(160, 160, 160);
+    border-radius: 1.25rem;
+    background-color: rgba(217, 217, 217, 0.594);
     margin: 15px;
 }
