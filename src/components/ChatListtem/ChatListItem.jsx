@@ -4,18 +4,31 @@ import * as messagesAPI from '../../utilities/messages-api';
 import { useState, useEffect, useRef } from 'react';
 
 
-export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox, lastMessage, setLastMessage }, ref) {
+export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox, lastMessage, setLastMessage, messages, mess }, ref) {
     const [secondUser, setSecondUser] = useState({});
-    const [inboxMessages, setInboxMessages] = useState([]);
+    const [inMessages, setInMessages] = useState([]);
+    const [message, setMessage] = useState(null);
+    // const [messages] = useRef();
+
+    const inboxMessages = messages.filter(message => message.inboxId === inbox._id);
 
     useEffect(function() {
         (async function(){
-            const messages = await messagesAPI.getMessages(inbox._id);
-            setInboxMessages(messages);
-            console.log(messages);
-            setLastMessage(messages[messages.length - 1])
+            // const messages = await messagesAPI.getMessages(inbox._id);
+            // setInboxMessages(messages);
+            setInMessages(inboxMessages);
+            console.log(inMessages);
+            console.log(lastMessage)
+            console.log(inboxMessages);
+            console.log(mess)
+            if(lastMessage.inboxId === inbox._id) {
+                setMessage(lastMessage)
+                console.log(lastMessage);
+            }
+
+            // setLastMessage(messages[messages.length - 1])
         })();
-    }, [user])
+    }, [lastMessage]);
 
     useEffect(function() {
         (async function() {
@@ -23,7 +36,7 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
                 const fetchUser = await inboxAPI.getSecondUser(secondUserId);
                 setSecondUser(fetchUser[0])
         })();
-}, [])
+}, [inMessages])
 
     function handleMouseEnter(e) {
        e.target.children[1].classList.remove('hidden')
@@ -36,23 +49,47 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
     return(
         <div onMouseLeave={(e => handleMouseLeave(e))} onMouseEnter={(e) => handleMouseEnter(e)} onClick={(e) => handleInboxClick(e, inbox)} className="chat-item">
             <span className="chat-item-content">{secondUser.name}</span><button onClick={(e) => handleRemoveInbox(e)} className={ `hidden ${inbox._id}`} id="delete-chat" type="submit">X</button>
-            {lastMessage ?
+            {message ?
             <>
-            {lastMessage.inboxId === inbox._id ?
-            <>
-                {lastMessage.senderId === user._id ?
-                    <span className="last-message">You: {lastMessage.content.slice(0, 11)}...</span>
-                :
-                    <span className="last-message">{secondUser.name}: {lastMessage.content.slice(0, 11)}...</span>
-                }
+                {message.inboxId === inbox._id ?
+                <span>{message.content}</span>
+            :
+                <span>{inMessages[inMessages.length - 1]}</span>
+            }
             </>
+        :
+            <span></span>
+        }
+
+            {/* {inboxMessages[inboxMessages.length - 1].content ?
+            <span>{inboxMessages[inboxMessages.length - 1].content}</span>
             :
             <span></span>
+            } */}
+
+            {/* {inboxMessages[inboxMessages.length - 1] ?
+            <>
+            {inboxMessages[inboxMessages.length - 1].inboxId === inbox._id ?
+                <>
+                    {inboxMessages[inboxMessages.length - 1].senderId === user._id ?
+                        <span className="last-message">You: {inboxMessages[inboxMessages.length - 1].content.slice(0, 11)}...</span>
+                    :
+                        <>
+                            {inboxMessages[inboxMessages.length - 1].senderId === secondUser._id ?
+                            <span className="last-message">{secondUser.name}: {inboxMessages[inboxMessages.length - 1].content.slice(0, 11)}...</span>
+                            :
+                            <span></span>
+                            }
+                        </>
+                    }
+                </>
+            :
+                <span></span>
             }
              </>
             :
-            <p></p>
-        }
+                <p></p>
+        } */}
         </div>
     )
 }

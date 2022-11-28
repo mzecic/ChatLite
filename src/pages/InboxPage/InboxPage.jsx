@@ -70,7 +70,7 @@ export default function InboxPage({ user }) {
         setInboxToRemove(result);
         console.log(e.target.classList)
         const newInboxes = [...inboxes];
-        newInboxes.pop(result);
+        newInboxes.pop(removeInbox);
         setInboxes([...newInboxes]);
         setSelectedInbox(null);
     }
@@ -78,19 +78,40 @@ export default function InboxPage({ user }) {
       function handleInboxClick(e, inbox) {
         // console.log(inbox)
         // console.log(e.target.innerText);
-        setSelectedInbox(inbox)
+        setSelectedInbox(inbox);
       }
 
 
       async function handleUserClick(e) {
-        const result = allUsers.filter(user => user._id === e.target.getAttribute('id'));
+        const result = allUsers.filter(user => {
+            if(e.target.classList.contains(`${user._id}`)) {
+                return user;
+            }
+        })
         console.log(result);
-        setClickedUser(result);
-        console.log(clickedUser);
-        const newInbox = await inboxAPI.createInbox([user._id, result[0]._id]);
-        setInboxes([...inboxes, newInbox]);
-        setSelectedInbox(newInbox);
-        socket.emit('new-inbox', newInbox, result);
+        let inbox = null;
+        for(let i = 0; i < inboxes.length; i++) {
+            // if(inboxes[i].users.filter(userId => userId === user._id) && inboxes[i].users.filter(userId => userId === result[0]._id)) {
+            //     inbox = inboxes[i];
+            //     console.log(inbox)
+            // }
+            if(inboxes[i].users[0] === user._id && inboxes[i].users[1] === result[0]._id || inboxes[i].users[1] === user._id && inboxes[i].users[0] === result[0]._id) {
+                inbox = inboxes[i];
+                console.log(inbox)
+            }
+        }
+        if(inbox) {
+            setSelectedInbox(inbox);
+            inbox = null;
+        } else {
+            const newInbox = await inboxAPI.createInbox([user._id, result[0]._id]);
+            setInboxes([...inboxes, newInbox]);
+            setSelectedInbox(newInbox);
+            socket.emit('new-inbox', newInbox, result);
+        }
+
+
+        setClickedUser(result[0]._id);
       }
 
     return (
@@ -98,7 +119,7 @@ export default function InboxPage({ user }) {
             {inboxes.length || user ?
             <>
                 {inboxes.length ?
-                    <ChatList lastMessage={lastMessage} setLastMessage={setLastMessage} inboxes={inboxes} user={user} handleInboxClick={handleInboxClick} handleRemoveInbox={handleRemoveInbox}/>
+                    <ChatList messages={messages} lastMessage={lastMessage} setLastMessage={setLastMessage} inboxes={inboxes} user={user} handleInboxClick={handleInboxClick} handleRemoveInbox={handleRemoveInbox}/>
                 :
                     <div className="left-div">This is where your current chats will show</div>
                 }
