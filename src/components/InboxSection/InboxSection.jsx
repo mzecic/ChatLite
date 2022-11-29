@@ -10,41 +10,44 @@ import socket from '../../utilities/socket';
 
 
 
-export default function InboxSection({ selectedInbox, user, notifications, setNotifications, messages, setMessages, setLastMessage }) {
+export default function InboxSection({ selectedInbox, user, notifications, setNotifications, messages, setMessages, lastMessage, setLastMessage }) {
     const [secondUser, setSecondUser] = useState({});
     const [text, setText] = useState('');
 
 
 
-    let selectedInboxBackup = null;
+    // let selectedInboxBackup = null;
 
 
-    useEffect(function() {
+    // useEffect(function() {
 
-        (async function() {
-            if (selectedInbox) {
-                const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
-                setMessages(inboxMessages);
-                socket.emit('join-chat', selectedInbox._id);
-                selectedInboxBackup = selectedInbox;
-            }
-        })();
+    //     (async function() {
+    //         if (selectedInbox) {
+    //             const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
+    //             setMessages(inboxMessages);
+    //             socket.emit('join-chat', selectedInbox._id);
+    //             selectedInboxBackup = selectedInbox;
+    //         }
+    //     })();
 
-    }, [selectedInbox])
+    // }, [selectedInbox])
 
 
-    useEffect(function() {
-        socket.on('message-receive', function(newMessage, previousMessages) {
-            if(!selectedInboxBackup || selectedInboxBackup._id !== newMessage.inboxId) {
-                //notifications
-                setLastMessage(newMessage);
-            } else {
-                console.log(previousMessages);
-                setMessages([...previousMessages, newMessage]);
-                // setLastMessage(newMessage);
-            }
-        })
-    })
+    // useEffect(function() {
+    //     socket.on('message-receive', function(newMessage, previousMessages) {
+    //         if(!selectedInboxBackup || selectedInboxBackup._id !== newMessage.inboxId) {
+    //             //notifications
+    //             console.log('not in inbox currently');
+    //             // console.log(selectedInboxBackup._id);
+    //             // setLastMessage(newMessage);
+    //         } else if(selectedInbox._id === newMessage.inboxId) {
+    //             console.log('fires when im not here');
+    //             console.log(selectedInbox._id);
+    //             setMessages([...messages, newMessage]);
+    //             // setLastMessage(newMessage);
+    //         }
+    //     })
+    // }, [selectedInbox])
 
 
 
@@ -73,13 +76,12 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
             }
 
             const newMessage = await messagesAPI.createMessage(message);
-            setMessages([...messages, newMessage]);
             const previousMessages = messages;
-            console.log(messages);
+            setMessages([...messages, newMessage]);
+            // console.log(messages);
             socket.emit('new-message', newMessage, secondUser, selectedInbox, previousMessages);
             setLastMessage(newMessage)
             setText('');
-
         }
 
     }

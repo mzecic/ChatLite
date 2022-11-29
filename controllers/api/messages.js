@@ -3,6 +3,7 @@ const Message = require('../../models/message');
 module.exports = {
     create,
     show,
+    index
 }
 
 async function create(req, res) {
@@ -25,4 +26,9 @@ async function show(req, res) {
     } catch(err) {
         res.status(500).json(err);
     }
+}
+
+async function index(req, res) {
+    const messages = await Message.find({});
+    res.json(messages);
 }

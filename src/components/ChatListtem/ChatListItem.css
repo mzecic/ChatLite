@@ -8,6 +8,7 @@
     display: grid;
     grid-template-columns: 50% 50%;
     grid-template-rows: 50% 50%;
+    z-index: 1;
 }
 
 .chat-item:hover {
@@ -38,6 +39,7 @@
 .chat-item span {
     margin: 5px 10px;
     text-align: left;
+    z-index: 0;
 }
 
 .last-message {
@@ -47,4 +49,8 @@
     grid-column: 1/1;
     grid-row: 2/2;
 
+}
+
+.selected-inbox {
+    box-shadow: 1px 1px 3px 3px rgb(0, 120, 255);
 }

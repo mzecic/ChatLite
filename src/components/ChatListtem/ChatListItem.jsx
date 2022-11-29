@@ -4,26 +4,26 @@ import * as messagesAPI from '../../utilities/messages-api';
 import { useState, useEffect, useRef } from 'react';
 
 
-export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox, lastMessage, setLastMessage, messages, mess }, ref) {
+export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox, lastMessage, setLastMessage, allMessages, mess }, ref) {
     const [secondUser, setSecondUser] = useState({});
     const [inMessages, setInMessages] = useState([]);
     const [message, setMessage] = useState(null);
     // const [messages] = useRef();
 
-    const inboxMessages = messages.filter(message => message.inboxId === inbox._id);
+    const inboxMessages = allMessages.filter(message => message.inboxId === inbox._id);
 
     useEffect(function() {
         (async function(){
             // const messages = await messagesAPI.getMessages(inbox._id);
             // setInboxMessages(messages);
-            setInMessages(inboxMessages);
-            console.log(inMessages);
-            console.log(lastMessage)
-            console.log(inboxMessages);
-            console.log(mess)
+            setInMessages(allMessages.filter(message => message.inboxId === inbox._id));
+            // console.log(inMessages);
+            // console.log(lastMessage)
+            // console.log(inboxMessages);
+            // console.log(mess)
             if(lastMessage.inboxId === inbox._id) {
                 setMessage(lastMessage)
-                console.log(lastMessage);
+                // console.log(lastMessage);
             }
 
             // setLastMessage(messages[messages.length - 1])
@@ -49,17 +49,17 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
     return(
         <div onMouseLeave={(e => handleMouseLeave(e))} onMouseEnter={(e) => handleMouseEnter(e)} onClick={(e) => handleInboxClick(e, inbox)} className="chat-item">
             <span className="chat-item-content">{secondUser.name}</span><button onClick={(e) => handleRemoveInbox(e)} className={ `hidden ${inbox._id}`} id="delete-chat" type="submit">X</button>
-            {message ?
+            {/* {inMessages[inMessages.length - 1] ?
             <>
-                {message.inboxId === inbox._id ?
-                <span>{message.content}</span>
+                {inMessages[inMessages.length - 1].inboxId === inbox._id ?
+                <span className="last-message">{inMessages[inMessages.length - 1].content}</span>
             :
-                <span>{inMessages[inMessages.length - 1]}</span>
+                <span className="last-message">{inMessages[inMessages.length - 1]}</span>
             }
             </>
         :
             <span></span>
-        }
+        } */}
 
             {/* {inboxMessages[inboxMessages.length - 1].content ?
             <span>{inboxMessages[inboxMessages.length - 1].content}</span>
@@ -67,7 +67,7 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
             <span></span>
             } */}
 
-            {/* {inboxMessages[inboxMessages.length - 1] ?
+            {inboxMessages[inboxMessages.length - 1] ?
             <>
             {inboxMessages[inboxMessages.length - 1].inboxId === inbox._id ?
                 <>
@@ -89,7 +89,7 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
              </>
             :
                 <p></p>
-        } */}
+        }
         </div>
     )
 }
