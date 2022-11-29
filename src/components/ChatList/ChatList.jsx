@@ -1,7 +1,7 @@
 import './ChatList.css';
 import ChatListItem from '../ChatListtem/ChatListItem';
 
-export default function ChatList({ inboxes, user, handleInboxClick, handleRemoveInbox, lastMessage, setLastMessage, messages }) {
+export default function ChatList({ inboxes, user, handleInboxClick, handleRemoveInbox, lastMessage, setLastMessage, allMessages }) {
 
 
 
@@ -11,7 +11,7 @@ export default function ChatList({ inboxes, user, handleInboxClick, handleRemove
 
                 return <ChatListItem
                 mess={mess}
-                messages={messages}
+                allMessages={allMessages}
                 lastMessage={lastMessage}
                 setLastMessage={setLastMessage}
                 inbox={inbox}

@@ -8,3 +8,7 @@ export function getMessages(inboxId) {
 export function createMessage(message) {
     return sendRequest(`${BASE_URL}`, 'POST', message)
 }
+
+export function getAllMessages() {
+    return sendRequest(`${BASE_URL}`);
+}
