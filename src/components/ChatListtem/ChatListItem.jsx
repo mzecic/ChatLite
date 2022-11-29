@@ -23,6 +23,7 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
             // console.log(mess)
             if(lastMessage.inboxId === inbox._id) {
                 setMessage(lastMessage)
+                console.log('its firing')
                 // console.log(lastMessage);
             }
 

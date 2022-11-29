@@ -42,16 +42,18 @@ export default function InboxPage({ user }) {
 
     useEffect(function() {
         socket.on('message-receive', function(newMessage, previousMessages) {
-            if(!selectedInboxBackup || selectedInboxBackup._id !== newMessage.inboxId) {
+            if(!selectedInbox || selectedInbox._id !== newMessage.inboxId) {
                 //notifications
                 console.log('not in inbox currently');
                 // console.log(selectedInboxBackup._id);
                 setLastMessage(newMessage);
-            } else if(user._id !== newMessage.senderId && selectedInbox.users.includes(newMessage.senderId)){
+                return
+            } else {
                 console.log('fires when im here');
                 console.log(selectedInbox._id);
-                setMessages([...previousMessages, newMessage]);
-                // setLastMessage(newMessage);
+                // setMessages([...previousMessages])
+                setMessages([...messages, newMessage]);
+                setLastMessage(newMessage);
             }
         })
     }, )
