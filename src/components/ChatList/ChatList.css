@@ -7,3 +7,9 @@
     margin: 15px;
     overflow-y: scroll;
 }
+
+@media (max-width: 1200px) {
+    .left-div {
+        display: none;
+    }
+}

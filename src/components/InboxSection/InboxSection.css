@@ -39,9 +39,18 @@
     width: 80px;
     height: 30px;
     margin: 10px 10px;
+    padding: 0 !important;
+    font-size: 15px !important;
 }
 
 .send-btn:hover {
     cursor: pointer;
     background-color: rgba(0, 132, 255, 0.502);
+}
+
+
+@media (max-width: 1200px) {
+    .middle-div {
+        grid-column: 1/4;
+    }
 }

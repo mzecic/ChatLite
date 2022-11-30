@@ -51,8 +51,8 @@ export default function InboxPage({ user }) {
                 let currentInboxes = [...inboxes];
                 let inboxToUpdate = currentInboxes.find(inbox => inbox._id === updatedInbox._id);
                 currentInboxes.splice(currentInboxes.indexOf(inboxToUpdate), 1);
-                currentInboxes.splice(currentInboxes.indexOf(inboxToUpdate), 0, updatedInbox)
-                setInboxes([...currentInboxes]);
+                // currentInboxes.splice(currentInboxes.indexOf(inboxToUpdate), 0, updatedInbox)
+                setInboxes([...currentInboxes, updatedInbox]);
                 setSelectedInbox(selectedInbox);
                 //notifications
                 console.log('not in inbox');
