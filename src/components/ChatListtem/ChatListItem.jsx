@@ -6,38 +6,24 @@ import { useState, useEffect, useRef } from 'react';
 
 export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox, lastMessage, setLastMessage, allMessages, mess }, ref) {
     const [secondUser, setSecondUser] = useState({});
-    const [inMessages, setInMessages] = useState([]);
     const [message, setMessage] = useState(null);
     // const [messages] = useRef();
 
-    const inboxMessages = allMessages.filter(message => message.inboxId === inbox._id);
 
     useEffect(function() {
-        (async function(){
-            // const messages = await messagesAPI.getMessages(inbox._id);
-            // setInboxMessages(messages);
-            setInMessages(allMessages.filter(message => message.inboxId === inbox._id));
-            // console.log(inMessages);
-            // console.log(lastMessage)
-            // console.log(inboxMessages);
-            // console.log(mess)
-            if(lastMessage.inboxId === inbox._id) {
-                setMessage(lastMessage)
-                console.log('its firing')
-                // console.log(lastMessage);
-            }
-
-            // setLastMessage(messages[messages.length - 1])
+        (async function() {
+            setLastMessage(lastMessage);
         })();
-    }, [lastMessage]);
+    }, [lastMessage])
 
     useEffect(function() {
         (async function() {
                 const secondUserId = inbox.users.find(userId => userId !== user._id);
                 const fetchUser = await inboxAPI.getSecondUser(secondUserId);
-                setSecondUser(fetchUser[0])
+                setSecondUser(fetchUser[0]);
+                console.log(inbox.messages[inbox.messages.length - 1])
         })();
-}, [inMessages])
+}, [inbox])
 
     function handleMouseEnter(e) {
        e.target.children[1].classList.remove('hidden')
@@ -50,34 +36,15 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
     return(
         <div onMouseLeave={(e => handleMouseLeave(e))} onMouseEnter={(e) => handleMouseEnter(e)} onClick={(e) => handleInboxClick(e, inbox)} className="chat-item">
             <span className="chat-item-content">{secondUser.name}</span><button onClick={(e) => handleRemoveInbox(e)} className={ `hidden ${inbox._id}`} id="delete-chat" type="submit">X</button>
-            {/* {inMessages[inMessages.length - 1] ?
-            <>
-                {inMessages[inMessages.length - 1].inboxId === inbox._id ?
-                <span className="last-message">{inMessages[inMessages.length - 1].content}</span>
-            :
-                <span className="last-message">{inMessages[inMessages.length - 1]}</span>
-            }
-            </>
-        :
-            <span></span>
-        } */}
 
-            {/* {inboxMessages[inboxMessages.length - 1].content ?
-            <span>{inboxMessages[inboxMessages.length - 1].content}</span>
-            :
-            <span></span>
-            } */}
-
-            {inboxMessages[inboxMessages.length - 1] ?
-            <>
-            {inboxMessages[inboxMessages.length - 1].inboxId === inbox._id ?
+            {inbox.messages[inbox.messages.length - 1] ?
                 <>
-                    {inboxMessages[inboxMessages.length - 1].senderId === user._id ?
-                        <span className="last-message">You: {inboxMessages[inboxMessages.length - 1].content.slice(0, 11)}...</span>
+                    {inbox.messages[inbox.messages.length - 1].senderId === user._id ?
+                        <span className="last-message">You: {inbox.messages[inbox.messages.length - 1].content.slice(0, 11)}...</span>
                     :
                         <>
-                            {inboxMessages[inboxMessages.length - 1].senderId === secondUser._id ?
-                            <span className="last-message">{secondUser.name}: {inboxMessages[inboxMessages.length - 1].content.slice(0, 11)}...</span>
+                            {inbox.messages[inbox.messages.length - 1].senderId === secondUser._id ?
+                            <span className="last-message">{secondUser.name}: {inbox.messages[inbox.messages.length - 1].content.slice(0, 11)}...</span>
                             :
                             <span></span>
                             }
@@ -87,10 +54,6 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
             :
                 <span></span>
             }
-             </>
-            :
-                <p></p>
-        }
         </div>
     )
 }

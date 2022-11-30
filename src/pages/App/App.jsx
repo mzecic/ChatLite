@@ -7,6 +7,7 @@ import NewOrderPage from '../NewOrderPage/NewOrderPage'
 import OrderHistoryPage from '../OrderHistoryPage/OrderHistoryPage'
 import NavBar from '../../components/NavBar/NavBar'
 import InboxPage from '../InboxPage/InboxPage'
+import SignUpForm from '../../components/SignUpForm/SignUpForm';
 
 export default function App() {
   const [user, setUser] = useState(getUser())
@@ -18,8 +19,7 @@ export default function App() {
           <NavBar user={user} setUser={setUser} />
           <InboxPage user={user}/>
           <Routes>
-            <Route path="/orders/new" element={<NewOrderPage />} />
-            <Route path="/orders" element={<OrderHistoryPage />} />
+            <Route path="/signup" element={<SignUpForm />} />
             {/* <Route path="/inbox" element={<InboxPage user={user}/>}/> */}
           </Routes>
         </>

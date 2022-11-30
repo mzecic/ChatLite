@@ -10,7 +10,7 @@ import socket from '../../utilities/socket';
 
 
 
-export default function InboxSection({ selectedInbox, user, notifications, setNotifications, messages, setMessages, lastMessage, setLastMessage }) {
+export default function InboxSection({ setSelectedInbox, selectedInbox, user, notifications, setNotifications, messages, setMessages, lastMessage, setLastMessage }) {
     const [secondUser, setSecondUser] = useState({});
     const [text, setText] = useState('');
 
@@ -72,15 +72,13 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
             const message = {
                 senderId: user,
                 content: text,
-                inboxId: selectedInbox._id
             }
 
-            const newMessage = await messagesAPI.createMessage(message);
-            const previousMessages = messages;
-            setMessages([...messages, newMessage]);
-            // console.log(messages);
-            socket.emit('new-message', newMessage, secondUser, selectedInbox, previousMessages);
-            setLastMessage(newMessage)
+            const updatedInbox = await messagesAPI.createMessage(message, selectedInbox);
+            // console.log([...getInbox.messages, newMessage]);
+            setSelectedInbox(updatedInbox);
+            socket.emit('new-message', updatedInbox);
+            setLastMessage(updatedInbox.messages[updatedInbox.messages.length - 1]);
             setText('');
         }
 
@@ -96,8 +94,8 @@ export default function InboxSection({ selectedInbox, user, notifications, setNo
             <div className="messages-list">
             {selectedInbox ?
                 <div>
-                    {messages.length ?
-                    <MessageList messages={messages} user={user} selectedInbox={selectedInbox} secondUser={secondUser}/>
+                    {selectedInbox.messages.length ?
+                    <MessageList user={user} selectedInbox={selectedInbox} secondUser={secondUser}/>
                     :
                     <h1>Type below to start chatting</h1>
                     }

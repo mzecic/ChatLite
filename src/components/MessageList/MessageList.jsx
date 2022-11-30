@@ -1,16 +1,16 @@
 import { useEffect, useRef } from "react";
 import MessageListItem from "../MessageListItem/MessageListItem";
 
-export default function MessageList({ messages, user, secondUser }) {
+export default function MessageList({ user, secondUser, selectedInbox }) {
     const scrollDown = useRef();
 
     useEffect(function() {
         scrollDown.current?.scrollTo({ block: "end", alignToTop: false, behavior: "smooth" })
-    }, [messages])
+    }, [selectedInbox.messages])
 
     return(
         <div ref={scrollDown}>
-            {messages.map((message) => {
+            {selectedInbox.messages.map((message) => {
 
                 if(message.senderId === user._id) {
                     return <MessageListItem

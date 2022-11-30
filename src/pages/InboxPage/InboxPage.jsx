@@ -21,7 +21,7 @@ export default function InboxPage({ user }) {
     const [socketConnected, setSocketConnected] = useState(false);
     const [inboxToRemove, setInboxToRemove] = useState(null);
     const [clickedUser, setClickedUser] = useState(null);
-    const [allMessages, setAllMessages] = useState([]);
+    // const [allMessages, setAllMessages] = useState([]);
 
 
     let selectedInboxBackup = null;
@@ -31,41 +31,36 @@ export default function InboxPage({ user }) {
 
         (async function() {
             if (selectedInbox) {
-                const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
-                setMessages(inboxMessages);
+                const updatedInbox = await inboxAPI.getInbox(selectedInbox);
+                setSelectedInbox(selectedInbox);
+                setMessages(updatedInbox.messages);
                 socket.emit('join-chat', selectedInbox._id);
+                console.log(updatedInbox)
                 selectedInboxBackup = selectedInbox;
             }
         })();
 
-    }, [selectedInbox])
+    }, [])
 
     useEffect(function() {
-        socket.on('message-receive', function(newMessage, previousMessages) {
-            if(!selectedInbox || selectedInbox._id !== newMessage.inboxId) {
+        socket.on('message-receive', function(updatedInbox) {
+            let newMessage = updatedInbox.messages[updatedInbox.messages.length - 1];
+            if(!selectedInbox || selectedInbox._id !== updatedInbox._id) {
+                setInboxes(inboxes);
+                console.log(selectedInbox, updatedInbox)
                 //notifications
-                console.log('not in inbox currently');
                 // console.log(selectedInboxBackup._id);
-                setLastMessage(newMessage);
-                return
+                console.log('not in inbox');
             } else {
-                console.log('fires when im here');
-                console.log(selectedInbox._id);
-                // setMessages([...previousMessages])
-                setMessages([...messages, newMessage]);
-                setLastMessage(newMessage);
+                console.log(selectedInboxBackup, selectedInbox);
+                    console.log('im getting the message');
+                    setSelectedInbox(updatedInbox);
+                    setLastMessage(lastMessage);
+                    // setLastMessage(newMessage);
             }
         })
-    }, )
+    })
 
-
-
-    useEffect(function() {
-        (async function() {
-            const result = await messagesAPI.getAllMessages();
-            setAllMessages(result);
-        })();
-    }, [lastMessage])
 
     useEffect(function() {
         (async function() {
@@ -104,7 +99,7 @@ export default function InboxPage({ user }) {
                 const result = await inboxAPI.getInboxes(user._id);
                 setInboxes(result);
       })();
-      }, [user])
+      }, [user, selectedInbox])
 
     async function handleRemoveInbox(e) {
         const removeInbox = inboxes.filter(inbox => {
@@ -168,12 +163,13 @@ export default function InboxPage({ user }) {
             {inboxes.length || user ?
             <>
                 {inboxes.length ?
-                    <ChatList allMessages={allMessages} lastMessage={lastMessage} setLastMessage={setLastMessage} inboxes={inboxes} user={user} handleInboxClick={handleInboxClick} handleRemoveInbox={handleRemoveInbox}/>
+                    <ChatList lastMessage={lastMessage} setLastMessage={setLastMessage} inboxes={inboxes} user={user} handleInboxClick={handleInboxClick} handleRemoveInbox={handleRemoveInbox}/>
                 :
                     <div className="left-div">This is where your current chats will show</div>
                 }
 
                 <InboxSection
+                setSelectedInbox={setSelectedInbox}
                 lastMessage={lastMessage}
                 setLastMessage={setLastMessage}
                 messages={messages}
