@@ -21,9 +21,8 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
                 const secondUserId = inbox.users.find(userId => userId !== user._id);
                 const fetchUser = await inboxAPI.getSecondUser(secondUserId);
                 setSecondUser(fetchUser[0]);
-                console.log(inbox.messages[inbox.messages.length - 1])
         })();
-}, [inbox])
+}, [])
 
     function handleMouseEnter(e) {
        e.target.children[1].classList.remove('hidden')

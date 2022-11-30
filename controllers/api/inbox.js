@@ -46,6 +46,6 @@ async function deleteInbox(req, res) {
 }
 
 async function get(req, res) {
-    // const inbox = Inbox.findOne({ _id: req.params.inboxId });
-    // res.json(inbox);
+    const inbox = await Inbox.findOne({ _id: req.params.id });
+    res.json(inbox);
 }

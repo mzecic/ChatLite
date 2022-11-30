@@ -47,14 +47,9 @@ function init(http) {
         })
 
         socket.on('new-message', function(updatedInbox) {
-
             updatedInbox.users.forEach(user => {
                 if(user === updatedInbox.messages[updatedInbox.messages.length - 1].senderId) return;
-
-
                 socket.in(user).emit('message-receive', updatedInbox);
-
-
             })
         })
 

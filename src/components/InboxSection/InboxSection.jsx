@@ -75,7 +75,6 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
             }
 
             const updatedInbox = await messagesAPI.createMessage(message, selectedInbox);
-            // console.log([...getInbox.messages, newMessage]);
             setSelectedInbox(updatedInbox);
             socket.emit('new-message', updatedInbox);
             setLastMessage(updatedInbox.messages[updatedInbox.messages.length - 1]);
