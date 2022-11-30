@@ -12,4 +12,22 @@
     .right-div {
         display: none;
     }
+
+    .user-list-mobile-hidden {
+        display: none;
+    }
+
+    .user-list-mobile {
+        left: 60%;
+        display: block;
+        z-index: 9;
+        position: absolute;
+        padding: 0;
+    }
+}
+
+@media (max-width: 500px) {
+    .user-list-mobile {
+        right: 10px;
+    }
 }

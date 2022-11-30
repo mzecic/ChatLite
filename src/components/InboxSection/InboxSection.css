@@ -35,24 +35,29 @@
 
 .send-btn {
     border-radius: 1.25rem;
-    border: 2px solid rgb(151, 151, 151);
+    border: 1px solid rgb(151, 151, 151);
+    background-color: rgb(61, 181, 1);
+    color: white;
     width: 80px;
-    height: 30px;
+    height: 40px;
     margin: 10px 10px;
-    padding: 0 !important;
+    padding: 5px 20px !important;
     font-size: 15px !important;
 }
 
 .send-btn:hover {
     cursor: pointer;
-    background-color: rgba(0, 132, 255, 0.502);
+    background-color: rgba(61, 181, 1, 0.754);
 }
-
 
 @media (max-width: 1200px) {
     .middle-div {
         grid-column: 1/4;
         margin: 0 1vh;
         height: 90vh;
+    }
+
+    .react-emoji-picker--wrapper {
+        width: 200px;
     }
 }

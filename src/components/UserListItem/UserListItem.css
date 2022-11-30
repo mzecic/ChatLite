@@ -7,10 +7,28 @@
     margin: 15px auto;
 }
 
+.user-item:hover {
+    cursor: pointer;
+}
+
 .user-item-content {
     z-index: 0;
 }
 
 .hidden {
     display: none;
+}
+
+@media (max-width: 1200px) {
+    .user-item {
+        background-color: rgba(214, 214, 214, 0.7);
+        border: 1px solid rgb(138, 138, 138);
+        width: 200px;
+    }
+}
+
+@media (max-width: 500px) {
+    .user-item {
+        width: 170px;
+    }
 }

@@ -12,4 +12,22 @@
     .left-div {
         display: none;
     }
+
+    .chat-list-mobile-hidden {
+        display: none;
+    }
+
+    .chat-list-mobile {
+        display: block;
+        z-index: 9;
+        position: absolute;
+        right: 60%;
+    }
+}
+
+@media (max-width: 500px) {
+    .chat-list-mobile {
+        left: 0px;
+        padding: 0 10px;
+    }
 }
