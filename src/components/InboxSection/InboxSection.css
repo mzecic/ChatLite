@@ -1,6 +1,6 @@
 .middle-div {
     grid-column: 2/2;
-    height: 100vh;
+    height: 92vh;
     border: 1px solid rgb(176, 176, 176);
     border-radius: 1.25rem;
     margin: 15px;
@@ -52,5 +52,7 @@
 @media (max-width: 1200px) {
     .middle-div {
         grid-column: 1/4;
+        margin: 0 1vh;
+        height: 90vh;
     }
 }
