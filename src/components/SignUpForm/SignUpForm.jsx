@@ -37,7 +37,7 @@ export default function SignUpForm({ setUser }) {
     }
 
     return(
-        <div>
+        <div className="auth-wrapper-signup">
             <div className="form-container">
               <form autoComplete="off" onSubmit={handleSubmit}>
                 <label>Name</label>
@@ -48,7 +48,7 @@ export default function SignUpForm({ setUser }) {
                 <input type="password" name="password" value={formData.password} onChange={handleChange} required />
                 <label>Confirm</label>
                 <input type="password" name="confirm" value={formData.confirm} onChange={handleChange} required />
-                <button type="submit" disabled={disable}>SIGN UP</button>
+                <button type="submit" disabled={disable}>Sign Up</button>
               </form>
             </div>
             <p className="error-message">&nbsp;{formData.error}</p>
