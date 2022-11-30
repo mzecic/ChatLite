@@ -25,17 +25,18 @@ export default function InboxPage({ user }) {
 
 
     let selectedInboxBackup = null;
+    let selectedIn = document.querySelector('.selected-inbox');
 
 
     useEffect(function() {
-
         (async function() {
-            if (selectedInbox) {
+            if(selectedInbox) {
+            console.log('selectedInbox change is firing', selectedInbox)
                 const updatedInbox = await inboxAPI.getInbox(selectedInbox);
-                setSelectedInbox(selectedInbox);
+                console.log(updatedInbox)
+                setSelectedInbox(updatedInbox);
                 setMessages(updatedInbox.messages);
                 socket.emit('join-chat', selectedInbox._id);
-                console.log(updatedInbox)
                 selectedInboxBackup = selectedInbox;
             }
         })();
@@ -44,16 +45,20 @@ export default function InboxPage({ user }) {
 
     useEffect(function() {
         socket.on('message-receive', function(updatedInbox) {
-            let newMessage = updatedInbox.messages[updatedInbox.messages.length - 1];
+            // let newMessage = updatedInbox.messages[updatedInbox.messages.length - 1];
+            console.log(selectedInbox, updatedInbox);
             if(!selectedInbox || selectedInbox._id !== updatedInbox._id) {
-                setInboxes(inboxes);
-                console.log(selectedInbox, updatedInbox)
+                let currentInboxes = [...inboxes];
+                let inboxToUpdate = currentInboxes.find(inbox => inbox._id === updatedInbox._id);
+                currentInboxes.splice(currentInboxes.indexOf(inboxToUpdate), 1);
+                setInboxes([...currentInboxes, updatedInbox]);
+                setSelectedInbox(selectedInbox);
                 //notifications
-                // console.log(selectedInboxBackup._id);
                 console.log('not in inbox');
             } else {
-                console.log(selectedInboxBackup, selectedInbox);
+                console.log(selectedIn, selectedInbox);
                     console.log('im getting the message');
+                    // updatedInbox.messages.shift(0, updatedInbox.messages.length/2);
                     setSelectedInbox(updatedInbox);
                     setLastMessage(lastMessage);
                     // setLastMessage(newMessage);
@@ -98,6 +103,7 @@ export default function InboxPage({ user }) {
         (async function() {
                 const result = await inboxAPI.getInboxes(user._id);
                 setInboxes(result);
+                console.log('this use effect is firing');
       })();
       }, [user, selectedInbox])
 
