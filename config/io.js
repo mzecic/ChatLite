@@ -43,14 +43,18 @@ function init(http) {
         socket.on('join-chat', function(room) {
             socket.join(room);
             console.log('User Joined Room', room);
+            console.log(socket.rooms)
         })
 
-        socket.on('new-message', function(newMessage, secondUser, selectedInbox, previousMessages) {
+        socket.on('new-message', function(updatedInbox) {
 
-            selectedInbox.users.forEach(user => {
-                if(user === newMessage.senderId) return;
+            updatedInbox.users.forEach(user => {
+                if(user === updatedInbox.messages[updatedInbox.messages.length - 1].senderId) return;
 
-                socket.in(user).emit('message-receive', newMessage, previousMessages);
+
+                socket.in(user).emit('message-receive', updatedInbox);
+
+
             })
         })
 

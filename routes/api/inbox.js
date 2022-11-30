@@ -7,5 +7,6 @@ router.get('/:id', inboxCtrl.index);
 router.get('/detail/:firstId/:secondId', inboxCtrl.show);
 router.get('/users/:id', inboxCtrl.getSecondUser);
 router.delete('/:id', inboxCtrl.delete);
+router.get('/:inboxId/get', inboxCtrl.get)
 
 module.exports = router;

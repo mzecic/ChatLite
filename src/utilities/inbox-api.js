@@ -16,3 +16,7 @@ export async function createInbox(userId, secondUserId) {
 export async function removeInbox(removedInbox) {
     return sendRequest(`${BASE_URL}/${removedInbox[0]._id}`, 'DELETE', removedInbox);
 }
+
+export async function getInbox(inbox) {
+    return sendRequest(`${BASE_URL}/${inbox._id}/get`)
+}
