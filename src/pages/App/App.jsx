@@ -12,14 +12,15 @@ import SignUpForm from '../../components/SignUpForm/SignUpForm';
 
 export default function App() {
   const [user, setUser] = useState(getUser())
+  const [navBar, setNavBar] = useState(false);
 
   return (
     <main className="App">
       { user ?
         <>
           <NavBar user={user} setUser={setUser} />
-          <MobileNavBar user={user}/>
-          <InboxPage user={user}/>
+          <MobileNavBar user={user} navBar={navBar} setNavBar={setNavBar} />
+          <InboxPage user={user} navBar={navBar} setNavBar={setNavBar} />
           <Routes>
             {/* <Route path="/signup" element={<SignUpForm />} /> */}
             {/* <Route path="/inbox" element={<InboxPage user={user}/>}/> */}

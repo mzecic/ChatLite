@@ -9,7 +9,7 @@ import InboxSection from '../../components/InboxSection/InboxSection';
 import socket from '../../utilities/socket';
 import { propTypes } from 'react-input-emoji';
 
-export default function InboxPage({ user }) {
+export default function InboxPage({ user, navBar, setNavBar }) {
     const [inboxes, setInboxes] = useState([]);
     const [messages, setMessages] = useState([]);
     const [selectedInbox, setSelectedInbox] = useState(null);
@@ -170,7 +170,7 @@ export default function InboxPage({ user }) {
             {inboxes.length || user ?
             <>
                 {inboxes.length ?
-                    <ChatList lastMessage={lastMessage} setLastMessage={setLastMessage} inboxes={inboxes} user={user} handleInboxClick={handleInboxClick} handleRemoveInbox={handleRemoveInbox}/>
+                    <ChatList navBar={navBar} setNavBar={setNavBar} lastMessage={lastMessage} setLastMessage={setLastMessage} inboxes={inboxes} user={user} handleInboxClick={handleInboxClick} handleRemoveInbox={handleRemoveInbox}/>
                 :
                     <div className="left-div">This is where your current chats will show</div>
                 }
@@ -184,7 +184,7 @@ export default function InboxPage({ user }) {
                 notifications={notifications}
                 selectedInbox={selectedInbox}
                 user={user}/>
-                <UserList allUsers={allUsers} onlineUsers={onlineUsers} setAllUsers={setAllUsers} handleUserClick={handleUserClick} currentUser={user}/>
+                <UserList navBar={navBar} setNavBar={setNavBar} allUsers={allUsers} onlineUsers={onlineUsers} setAllUsers={setAllUsers} handleUserClick={handleUserClick} currentUser={user}/>
             </>
             :
             <>

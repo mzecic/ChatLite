@@ -2,6 +2,7 @@ import './ChatListItem.css';
 import * as inboxAPI from '../../utilities/inbox-api';
 import * as messagesAPI from '../../utilities/messages-api';
 import { useState, useEffect, useRef } from 'react';
+import MediaQuery from 'react-responsive';
 
 
 export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox, lastMessage, setLastMessage, allMessages, mess }, ref) {
@@ -33,26 +34,28 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
     }
 
     return(
-        <div onMouseLeave={(e => handleMouseLeave(e))} onMouseEnter={(e) => handleMouseEnter(e)} onClick={(e) => handleInboxClick(e, inbox)} className="chat-item">
-            <span className="chat-item-content">{secondUser.name}</span><button onClick={(e) => handleRemoveInbox(e)} className={ `hidden ${inbox._id}`} id="delete-chat" type="submit">X</button>
+        <>
+            <div onMouseLeave={(e => handleMouseLeave(e))} onMouseEnter={(e) => handleMouseEnter(e)} onClick={(e) => handleInboxClick(e, inbox)} className="chat-item">
+                <span className="chat-item-content">{secondUser.name}</span><button onClick={(e) => handleRemoveInbox(e)} className={ `hidden ${inbox._id}`} id="delete-chat" type="submit">X</button>
 
-            {inbox.messages[inbox.messages.length - 1] ?
-                <>
-                    {inbox.messages[inbox.messages.length - 1].senderId === user._id ?
-                        <span className="last-message">You: {inbox.messages[inbox.messages.length - 1].content.slice(0, 11)}...</span>
-                    :
-                        <>
-                            {inbox.messages[inbox.messages.length - 1].senderId === secondUser._id ?
-                            <span className="last-message">{secondUser.name}: {inbox.messages[inbox.messages.length - 1].content.slice(0, 11)}...</span>
-                            :
-                            <span></span>
-                            }
-                        </>
-                    }
-                </>
-            :
-                <span></span>
-            }
-        </div>
+                {inbox.messages[inbox.messages.length - 1] ?
+                    <>
+                        {inbox.messages[inbox.messages.length - 1].senderId === user._id ?
+                            <span className="last-message">You: {inbox.messages[inbox.messages.length - 1].content.slice(0, 11)}...</span>
+                        :
+                            <>
+                                {inbox.messages[inbox.messages.length - 1].senderId === secondUser._id ?
+                                <span className="last-message">{secondUser.name}: {inbox.messages[inbox.messages.length - 1].content.slice(0, 11)}...</span>
+                                :
+                                <span></span>
+                                }
+                            </>
+                        }
+                    </>
+                :
+                    <span></span>
+                }
+            </div>
+        </>
     )
 }
