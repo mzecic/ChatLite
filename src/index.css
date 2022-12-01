@@ -10,9 +10,10 @@
   --text-dark: #615954;
 }
 
-*, *:before, *:after {
+html, body {margin: 0; height: 100%; overflow: hidden}
+/* *, *:before, *:after {
   box-sizing: border-box;
-}
+} */
 
 body {
   margin: 0;
@@ -20,8 +21,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: white;
-  padding: 2vmin;
+  padding: 0;
   height: 100vh;
 }
-
-

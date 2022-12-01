@@ -87,6 +87,7 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                     console.log('im getting the message');
                     // updatedInbox.messages.shift(0, updatedInbox.messages.length/2);
                     setSelectedInbox(updatedInbox);
+                    document.querySelector('.messages-list').lastChild.scrollIntoView(false)
                     setLastMessage(lastMessage);
                     // setLastMessage(newMessage);
             }
@@ -145,18 +146,21 @@ export default function InboxPage({ user, navBar, setNavBar }) {
         setSelectedInbox(null);
     }
 
-      function handleInboxClick(e, inbox) {
-        // console.log(inbox)
-        // console.log(e.target.innerText);
-
+    function handleInboxClick(e, inbox) {
+        e.stopPropagation();
         let selectedInboxes = document.querySelectorAll('.selected-inbox');
         if(!e.target.classList.contains('selected-inbox')) {
-            e.target.classList.add('selected-inbox');
-            selectedInboxes.forEach(inbox => inbox.classList.remove('selected-inbox'))
+            if(!e.target.matches('div')) {
+                e.target.parentNode.classList.add('selected-inbox')
+                selectedInboxes.forEach(inbox => inbox.classList.remove('selected-inbox'))
+            } else if(e.target.matches('div')) {
+                e.target.classList.add('selected-inbox');
+                selectedInboxes.forEach(inbox => inbox.classList.remove('selected-inbox'))
+            }
         }
         setSelectedInbox(inbox);
         selectedInboxBackup = inbox;
-      }
+    }
 
       async function handleUserClick(e) {
         const result = allUsers.filter(user => {
@@ -178,7 +182,7 @@ export default function InboxPage({ user, navBar, setNavBar }) {
         }
         if(inbox) {
             setSelectedInbox(inbox);
-            handleInboxClick(e, inbox)
+            // handleInboxClick(e, inbox)
             inbox = null;
         } else {
             const newInbox = await inboxAPI.createInbox([user._id, result[0]._id]);

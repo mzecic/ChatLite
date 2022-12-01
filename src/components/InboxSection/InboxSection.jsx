@@ -70,23 +70,14 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
             setTyping(true);
             socket.emit('typing', selectedInbox._id);
         }
-        let lastTypingMoment = new Date().getTime();
-        let timerLength = 3000;
-        let timeDiff = 0;
         setTimeout(function() {
-            let timeNow = new Date().getTime();
-            timeDiff = timeNow - lastTypingMoment;
-            console.log(timeDiff)
                 socket.emit('typing-stopped', selectedInbox._id);
                 setTyping(false);
-        }, timerLength);
-        console.log(timeDiff)
-        // if(timeDiff >= timerLength && typing) {
-
-        // }
+        }, 2000);
     }
 
     async function handleClick(e) {
+
 
         if(text) {
 
@@ -104,6 +95,7 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
             socket.emit('typing-stopped', selectedInbox._id);
             setLastMessage(updatedInbox.messages[updatedInbox.messages.length - 1]);
             setText('');
+            document.querySelector('.messages-list').lastChild.scrollIntoView(false)
         }
 
     }
