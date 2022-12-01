@@ -34,37 +34,32 @@ export default function InboxPage({ user, navBar, setNavBar }) {
         socket.on('connection', function() {
             setSocketConnected(true);
         })
-            if(selectedInbox) {
-            socket.emit('join-chat', selectedInbox._id);
-            setTyping(false);
-            setIsTyping(false);
+            // if(selectedInbox) {
             // socket.emit('join-chat', selectedInbox._id);
-            socket.on('typing', function(room) {
-                console.log(room, selectedInbox);
-                if(selectedInbox._id === room) {
-                    console.log('typing\'s happening')
-                    setIsTyping(true);
-                }
+            // setTyping(false);
+            // setIsTyping(false);
+            // socket.on('typing', function(room) {
+            //     if(selectedInbox._id === room) {
+            //         console.log('typing\'s happening')
+            //         setIsTyping(true);
+            //     }
 
-            })
-            socket.on('typing-stopped', function() {
-                console.log('what the heck')
-                setIsTyping(false);
-            })
-            }
-    }, [isTyping]);
+            // })
+            // socket.on('typing-stopped', function(room) {
+            //     console.log(room)
+            //     console.log('what the heck')
+            //     setIsTyping(false);
+            // })
+            // }
+    }, []);
 
     useEffect(function() {
         (async function() {
-            if(selectedInbox) {
             console.log('selectedInbox change is firing', selectedInbox)
                 const updatedInbox = await inboxAPI.getInbox(selectedInbox);
-                console.log(updatedInbox)
                 setSelectedInbox(updatedInbox);
                 setMessages(updatedInbox.messages);
                 selectedInboxBackup = selectedInbox;
-            }
-
         })();
 
     }, [])
@@ -72,7 +67,7 @@ export default function InboxPage({ user, navBar, setNavBar }) {
     useEffect(function() {
         socket.on('message-receive', function(updatedInbox) {
             // let newMessage = updatedInbox.messages[updatedInbox.messages.length - 1];
-            console.log(selectedInbox, updatedInbox);
+            // console.log(selectedInbox, updatedInbox);
             if(!selectedInbox || selectedInbox._id !== updatedInbox._id) {
                 let currentInboxes = [...inboxes];
                 let inboxToUpdate = currentInboxes.find(inbox => inbox._id === updatedInbox._id);
@@ -83,7 +78,7 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                 //notifications
                 console.log('not in inbox');
             } else {
-                console.log(selectedIn, selectedInbox);
+                // console.log(selectedIn, selectedInbox);
                     console.log('im getting the message');
                     // updatedInbox.messages.shift(0, updatedInbox.messages.length/2);
                     setSelectedInbox(updatedInbox);
@@ -126,12 +121,36 @@ export default function InboxPage({ user, navBar, setNavBar }) {
     }, [inboxes]);
 
     useEffect(function() {
+        selectedInboxBackup = selectedInbox;
         (async function() {
                 const result = await inboxAPI.getInboxes(user._id);
                 setInboxes(result);
-                console.log('this use effect is firing');
+
+                console.log('this use effect is firing', selectedInboxBackup);
+
+                if(selectedInbox) {
+                    socket.emit('join-chat', selectedInbox);
+                    setTyping(false);
+                    setIsTyping(false);
+                    socket.on('typing', function(room) {
+                        if(room._id === selectedInboxBackup._id) {
+                            console.log(room, selectedInboxBackup)
+                            console.log('typing\'s happening')
+                            setIsTyping(true);
+                        }
+                    })
+                    socket.on('typing-stopped', function(room) {
+                        console.log('what the heck')
+                        setIsTyping(false);
+                    })
+
+                    }
+
       })();
       }, [user, selectedInbox])
+
+
+
 
     async function handleRemoveInbox(e) {
         const removeInbox = inboxes.filter(inbox => {
@@ -158,6 +177,10 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                 selectedInboxes.forEach(inbox => inbox.classList.remove('selected-inbox'))
             }
         }
+        if(selectedInbox) {
+            socket.emit('leave-room', selectedInbox._id);
+        }
+        
         setSelectedInbox(inbox);
         selectedInboxBackup = inbox;
     }
@@ -177,11 +200,19 @@ export default function InboxPage({ user, navBar, setNavBar }) {
             // }
             if(inboxes[i].users[0] === user._id && inboxes[i].users[1] === result[0]._id || inboxes[i].users[1] === user._id && inboxes[i].users[0] === result[0]._id) {
                 inbox = inboxes[i];
-                console.log(inbox)
             }
         }
         if(inbox) {
             setSelectedInbox(inbox);
+            const inboxes = document.querySelectorAll('.chat-item');
+            console.log(inboxes)
+            inboxes.forEach(chat => {
+                if(chat.classList.contains(inbox._id)) {
+                    let selectedInboxes = document.querySelectorAll('.selected-inbox');
+                    selectedInboxes.forEach(inbox => inbox.classList.remove('selected-inbox'))
+                    chat.classList.add('selected-inbox');
+                }
+            })
             // handleInboxClick(e, inbox)
             inbox = null;
         } else {
