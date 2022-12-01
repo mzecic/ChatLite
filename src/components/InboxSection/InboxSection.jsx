@@ -10,7 +10,7 @@ import socket from '../../utilities/socket';
 
 
 
-export default function InboxSection({ setSelectedInbox, selectedInbox, user, notifications, setNotifications, messages, setMessages, lastMessage, setLastMessage }) {
+export default function InboxSection({ setSelectedInbox, selectedInbox, user, notifications, setNotifications, messages, setMessages, lastMessage, setLastMessage, typing, setTyping, isTyping, setIsTyping, socketConnected }) {
     const [secondUser, setSecondUser] = useState({});
     const [text, setText] = useState('');
 
@@ -63,6 +63,27 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
 
     function handleChange(e) {
         setText(e);
+
+        if(!socketConnected) return
+
+        if(!typing) {
+            setTyping(true);
+            socket.emit('typing', selectedInbox._id);
+        }
+        let lastTypingMoment = new Date().getTime();
+        let timerLength = 3000;
+        let timeDiff = 0;
+        setTimeout(function() {
+            let timeNow = new Date().getTime();
+            timeDiff = timeNow - lastTypingMoment;
+            console.log(timeDiff)
+                socket.emit('typing-stopped', selectedInbox._id);
+                setTyping(false);
+        }, timerLength);
+        console.log(timeDiff)
+        // if(timeDiff >= timerLength && typing) {
+
+        // }
     }
 
     async function handleClick(e) {
@@ -80,6 +101,7 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
                 updatedInbox.messages.splice(0, 50);
             }
             socket.emit('new-message', updatedInbox);
+            socket.emit('typing-stopped', selectedInbox._id);
             setLastMessage(updatedInbox.messages[updatedInbox.messages.length - 1]);
             setText('');
         }
@@ -111,6 +133,11 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
             </div>
             {selectedInbox ?
                 <div className="input-div">
+                        {isTyping ?
+                        <div>Loading...</div>
+                        :
+                        <></>
+                        }
                         <InputEmoji
                         onEnter={handleEnter}
                         className="input"

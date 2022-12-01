@@ -37,13 +37,20 @@ function init(http) {
 
         socket.on('setup', function(user) {
             socket.join(user._id);
-            socket.emit('connected');
+            socket.emit('connection');
         })
 
         socket.on('join-chat', function(room) {
             socket.join(room);
             console.log('User Joined Room', room);
             console.log(socket.rooms)
+        })
+
+        socket.on('typing', function(room) {
+            socket.in(room).emit('typing', room);
+        })
+        socket.on('typing-stopped',function(room) {
+            socket.in(room).emit('typing-stopped');
         })
 
         socket.on('new-message', function(updatedInbox) {

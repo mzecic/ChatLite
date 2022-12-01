@@ -21,12 +21,38 @@ export default function InboxPage({ user, navBar, setNavBar }) {
     const [socketConnected, setSocketConnected] = useState(false);
     const [inboxToRemove, setInboxToRemove] = useState(null);
     const [clickedUser, setClickedUser] = useState(null);
+    const [typing, setTyping] = useState(false);
+    const [isTyping, setIsTyping] = useState(false);
     // const [allMessages, setAllMessages] = useState([]);
 
 
     let selectedInboxBackup = null;
     let selectedIn = document.querySelector('.selected-inbox');
 
+    useEffect(function() {
+        socket.emit('setup', user);
+        socket.on('connection', function() {
+            setSocketConnected(true);
+        })
+            if(selectedInbox) {
+            socket.emit('join-chat', selectedInbox._id);
+            setTyping(false);
+            setIsTyping(false);
+            // socket.emit('join-chat', selectedInbox._id);
+            socket.on('typing', function(room) {
+                console.log(room, selectedInbox);
+                if(selectedInbox._id === room) {
+                    console.log('typing\'s happening')
+                    setIsTyping(true);
+                }
+
+            })
+            socket.on('typing-stopped', function() {
+                console.log('what the heck')
+                setIsTyping(false);
+            })
+            }
+    }, [isTyping]);
 
     useEffect(function() {
         (async function() {
@@ -36,9 +62,9 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                 console.log(updatedInbox)
                 setSelectedInbox(updatedInbox);
                 setMessages(updatedInbox.messages);
-                socket.emit('join-chat', selectedInbox._id);
                 selectedInboxBackup = selectedInbox;
             }
+
         })();
 
     }, [])
@@ -86,10 +112,8 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                     }).filter(user => user !== undefined))
 
                 })
-                socket.emit('setup', user);
-                socket.on('connection', function() {
-                    setSocketConnected(true);
-                })
+
+
         })();
     }, [user])
 
@@ -131,6 +155,7 @@ export default function InboxPage({ user, navBar, setNavBar }) {
             selectedInboxes.forEach(inbox => inbox.classList.remove('selected-inbox'))
         }
         setSelectedInbox(inbox);
+        selectedInboxBackup = inbox;
       }
 
       async function handleUserClick(e) {
@@ -153,6 +178,7 @@ export default function InboxPage({ user, navBar, setNavBar }) {
         }
         if(inbox) {
             setSelectedInbox(inbox);
+            handleInboxClick(e, inbox)
             inbox = null;
         } else {
             const newInbox = await inboxAPI.createInbox([user._id, result[0]._id]);
@@ -176,6 +202,11 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                 }
 
                 <InboxSection
+                socketConnected={socketConnected}
+                typing={typing}
+                setTyping={setTyping}
+                isTyping={isTyping}
+                setIsTyping={setIsTyping}
                 setSelectedInbox={setSelectedInbox}
                 lastMessage={lastMessage}
                 setLastMessage={setLastMessage}
