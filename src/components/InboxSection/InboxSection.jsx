@@ -6,6 +6,7 @@ import MessageList from '../MessageList/MessageList';
 import InputEmoji from "react-input-emoji";
 import { IoSendOutline, IoChevronForwardSharp } from 'react-icons/io5';
 import socket from '../../utilities/socket';
+import { set } from 'mongoose';
 
 
 
@@ -63,15 +64,15 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
 
     function handleChange(e) {
         setText(e);
-
+        setTyping(false);
         if(!socketConnected) return
 
         if(!typing) {
+            socket.emit('typing', selectedInbox, user);
             setTyping(true);
-            socket.emit('typing', selectedInbox._id);
         }
         setTimeout(function() {
-                socket.emit('typing-stopped', selectedInbox._id);
+                socket.emit('typing-stopped', selectedInbox, user);
                 setTyping(false);
         }, 2000);
     }

@@ -35,7 +35,7 @@ export default function ChatListItem({ inbox, user, handleInboxClick, handleRemo
 
     return(
         <>
-            <div onMouseLeave={(e => handleMouseLeave(e))} onMouseEnter={(e) => handleMouseEnter(e)} onClick={(e) => handleInboxClick(e, inbox)} className="chat-item">
+            <div onMouseLeave={(e => handleMouseLeave(e))} onMouseEnter={(e) => handleMouseEnter(e)} onClick={(e) => handleInboxClick(e, inbox)} className={`chat-item ${inbox._id}`}>
                 <span className="chat-item-content">{secondUser.name}</span><button onClick={(e) => handleRemoveInbox(e)} className={ `hidden ${inbox._id}`} id="delete-chat" type="submit">X</button>
 
                 {inbox.messages[inbox.messages.length - 1] ?
