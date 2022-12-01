@@ -2,6 +2,10 @@
     display: none;
 }
 
+.mobile-nav-p {
+    display: none;
+}
+
 .mobile-nav button {
     position: fixed;
     font-size: 25px;
@@ -51,11 +55,22 @@ a {
 
 .nav-menu li {
     display: none;
-    margin-top: 5vh;
     border: 1px solid black;
 }
 
 @media (max-width: 1200px) {
+html, body {margin: 0; height: 100%; overflow: hidden}
+
+    .mobile-nav-p {
+        display: block;
+        text-align: center;
+        position: absolute;
+        z-index: 10;
+        margin: 0 auto;
+        top: 15px;
+        left: 150px;
+    }
+
     .mobile-nav {
         display: flex;
         justify-content: space-between;
@@ -68,14 +83,15 @@ a {
     .mobile-nav span {
         margin: 15px 5px 0 84%;
         width: 150px;
-        border: 1px solid grey;
-        border-radius: 1.25rem;
+
+
     }
     .mobile-nav span a{
         width: 150px;
         font-size: 15px;
         color: rgb(122, 122, 122);
         padding: 7px 15px;
+
     }
 
     .mobile-nav span:hover {
@@ -92,12 +108,12 @@ a {
 
 @media (max-width: 650px) {
     .mobile-nav span {
-        margin: 30px 10px 0 72%;
+        margin: 15px 10px 0 72%;
     }
 }
 
 @media (max-width: 500px) {
     .mobile-nav span {
-        margin: 15px 5px 0 67%;
+        margin: 15px 5px 0 63%;
     }
 }

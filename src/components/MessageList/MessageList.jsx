@@ -5,7 +5,7 @@ export default function MessageList({ user, secondUser, selectedInbox }) {
     const scrollDown = useRef();
 
     useEffect(function() {
-        scrollDown.current?.scrollTo({ block: "end", alignToTop: false, behavior: "smooth" })
+        scrollDown.current.scrollTo({ block: "end", alignToTop: false, behavior: "smooth" })
     }, [selectedInbox.messages])
 
     return(
