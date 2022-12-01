@@ -9,17 +9,23 @@ import NavBar from '../../components/NavBar/NavBar'
 import MobileNavBar from '../../components/MobileNavBar/MobileNavBar';
 import InboxPage from '../InboxPage/InboxPage'
 import SignUpForm from '../../components/SignUpForm/SignUpForm';
+import * as userService from '../../utilities/users-service'
 
 export default function App() {
-  const [user, setUser] = useState(getUser())
+  const [user, setUser] = useState(getUser());
   const [navBar, setNavBar] = useState(false);
+
+  function handleLogOut() {
+    userService.logOut()
+    setUser(null)
+}
 
   return (
     <main className="App">
       { user ?
         <>
-          <NavBar user={user} setUser={setUser} />
-          <MobileNavBar user={user} navBar={navBar} setNavBar={setNavBar} />
+          <NavBar handleLogOut={handleLogOut} user={user} setUser={setUser} />
+          <MobileNavBar handleLogOut={handleLogOut} user={user} navBar={navBar} setNavBar={setNavBar} />
           <InboxPage user={user} navBar={navBar} setNavBar={setNavBar} />
           <Routes>
             {/* <Route path="/signup" element={<SignUpForm />} /> */}
