@@ -149,7 +149,8 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                     setIsTyping(false);
                     socket.on('typing', function(room) {
                         if(room === selectedInbox._id) {
-                            console.log(room, selectedInboxBackup)
+                            console.log(room, selectedInboxBackup);
+                            console.log(isTyping);
                             console.log('typing\'s happening')
                             setIsTyping(true);
                         }
@@ -180,6 +181,7 @@ export default function InboxPage({ user, navBar, setNavBar }) {
 
     function handleInboxClick(e, inbox) {
         e.stopPropagation();
+        setIsTyping(false);
         let selectedInboxes = document.querySelectorAll('.selected-inbox');
         if(!e.target.classList.contains('selected-inbox')) {
             if(!e.target.matches('div')) {
@@ -241,29 +243,25 @@ export default function InboxPage({ user, navBar, setNavBar }) {
 
       function handleChange(e) {
         setText(e);
-        setTyping(false);
 
         if(!socketConnected) return
 
-        let lastTypingMoment = new Date().getTime();
-        let lastTypingNow = 0;
+
 
         if(!typing) {
             socket.emit('typing', inboxCopy.current._id, user);
             setTyping(true);
             console.log(selectedInbox)
-
         }
-
+        let lastTypingMoment = new Date().getTime();
         setTimeout(function() {
-                lastTypingNow = new Date().getTime();
+                let lastTypingNow = new Date().getTime();
                 let diff = lastTypingNow - lastTypingMoment;
                 console.log(diff)
-                if(diff >= 3000) {
                     console.log('it\'s stopping');
-                    socket.emit('typing-stopped', selectedInbox._id, user);
                     setTyping(false);
-                }
+                    socket.emit('typing-stopped', selectedInbox._id, user);
+
             }, 3000);
         }
 
