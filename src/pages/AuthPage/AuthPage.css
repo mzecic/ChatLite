@@ -56,6 +56,10 @@
 }
 
 @media(max-width: 800px) {
+    .title {
+        margin: 5px 0;
+    }
+
     .auth-wrapper-login{
         border: 1.5px solid rgb(166, 166, 166);
         border-radius: 1.25rem;
