@@ -11,9 +11,9 @@ import { set } from 'mongoose';
 
 
 
-export default function InboxSection({ setSelectedInbox, selectedInbox, user, notifications, setNotifications, messages, setMessages, lastMessage, setLastMessage, typing, setTyping, isTyping, setIsTyping, socketConnected }) {
+export default function InboxSection({ setSelectedInbox, selectedInbox, user, notifications, setNotifications, messages, setMessages, lastMessage, setLastMessage, typing, setTyping, isTyping, setIsTyping, socketConnected, handleChange, setText, text }) {
     const [secondUser, setSecondUser] = useState({});
-    const [text, setText] = useState('');
+    // const [text, setText] = useState('');
 
 
 
@@ -62,20 +62,21 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
         })();
     }, [selectedInbox, user])
 
-    function handleChange(e) {
-        setText(e);
-        setTyping(false);
-        if(!socketConnected) return
+    // function handleChange(e) {
+    //     setText(e);
+    //     setTyping(false);
+    //     if(!socketConnected) return
 
-        if(!typing) {
-            socket.emit('typing', selectedInbox, user);
-            setTyping(true);
-        }
-        setTimeout(function() {
-                socket.emit('typing-stopped', selectedInbox, user);
-                setTyping(false);
-        }, 2000);
-    }
+    //     if(!typing) {
+    //         socket.emit('typing', selectedInbox, user);
+    //         console.log(selectedInbox)
+    //         setTyping(true);
+    //     }
+    //     setTimeout(function() {
+    //             socket.emit('typing-stopped', selectedInbox, user);
+    //             setTyping(false);
+    //     }, 2000);
+    // }
 
     async function handleClick(e) {
 
@@ -125,12 +126,14 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
             }
             </div>
             {selectedInbox ?
-                <div className="input-div">
-                        {isTyping ?
-                        <div>Loading...</div>
-                        :
-                        <></>
-                        }
+                <>
+                <div>
+                    {isTyping ?
+                        <div className="typing-animation">Typing...</div>
+                    :
+                    <></>
+                    }
+                    <div className="input-div">
                         <InputEmoji
                         onEnter={handleEnter}
                         className="input"
@@ -138,7 +141,9 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
                         onChange={handleChange}
                         />
                         <button onClick={handleClick} className="send-btn" type="submit">Send</button>
+                    </div>
                 </div>
+                </>
             :
                 <div></div>
             }

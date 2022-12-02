@@ -23,6 +23,11 @@
     display: flex;
 }
 
+.typing-animation {
+    text-align: left;
+    margin: 10px 30px;
+}
+
 .react-input-emoji-input {
     width: 100px;
 }

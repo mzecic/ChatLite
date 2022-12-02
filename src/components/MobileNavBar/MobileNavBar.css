@@ -95,7 +95,6 @@ html, body {margin: 0; height: 100%; overflow: hidden}
     }
 
     .mobile-nav span:hover {
-        background-color: rgba(255, 0, 0, 0.111);
         cursor: pointer;
     }
 }

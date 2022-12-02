@@ -23,11 +23,10 @@ export default function InboxPage({ user, navBar, setNavBar }) {
     const [clickedUser, setClickedUser] = useState(null);
     const [typing, setTyping] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
-    // const [allMessages, setAllMessages] = useState([]);
+    const [text, setText] = useState('');
 
 
     let selectedInboxBackup = null;
-    let selectedIn = document.querySelector('.selected-inbox');
 
     useEffect(function() {
         socket.emit('setup', user);
@@ -66,6 +65,7 @@ export default function InboxPage({ user, navBar, setNavBar }) {
 
     useEffect(function() {
         socket.on('message-receive', function(updatedInbox) {
+            setIsTyping(false);
             // let newMessage = updatedInbox.messages[updatedInbox.messages.length - 1];
             // console.log(selectedInbox, updatedInbox);
             if(!selectedInbox || selectedInbox._id !== updatedInbox._id) {
@@ -129,11 +129,11 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                 console.log('this use effect is firing', selectedInboxBackup);
 
                 if(selectedInbox) {
-                    socket.emit('join-chat', selectedInbox);
+                    socket.emit('join-chat', selectedInbox._id);
                     setTyping(false);
                     setIsTyping(false);
                     socket.on('typing', function(room) {
-                        if(room._id === selectedInboxBackup._id) {
+                        if(room === selectedInbox._id) {
                             console.log(room, selectedInboxBackup)
                             console.log('typing\'s happening')
                             setIsTyping(true);
@@ -143,9 +143,7 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                         console.log('what the heck')
                         setIsTyping(false);
                     })
-
-                    }
-
+                }
       })();
       }, [user, selectedInbox])
 
@@ -177,11 +175,13 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                 selectedInboxes.forEach(inbox => inbox.classList.remove('selected-inbox'))
             }
         }
+
+
         if(selectedInbox) {
-            socket.emit('leave-room', selectedInbox._id);
+            socket.emit('leave-room', selectedInbox._id, inbox, user);
         }
-        
         setSelectedInbox(inbox);
+        console.log(selectedInbox._id)
         selectedInboxBackup = inbox;
     }
 
@@ -194,10 +194,6 @@ export default function InboxPage({ user, navBar, setNavBar }) {
         console.log(result);
         let inbox = null;
         for(let i = 0; i < inboxes.length; i++) {
-            // if(inboxes[i].users.filter(userId => userId === user._id) && inboxes[i].users.filter(userId => userId === result[0]._id)) {
-            //     inbox = inboxes[i];
-            //     console.log(inbox)
-            // }
             if(inboxes[i].users[0] === user._id && inboxes[i].users[1] === result[0]._id || inboxes[i].users[1] === user._id && inboxes[i].users[0] === result[0]._id) {
                 inbox = inboxes[i];
             }
@@ -213,7 +209,6 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                     chat.classList.add('selected-inbox');
                 }
             })
-            // handleInboxClick(e, inbox)
             inbox = null;
         } else {
             const newInbox = await inboxAPI.createInbox([user._id, result[0]._id]);
@@ -226,6 +221,23 @@ export default function InboxPage({ user, navBar, setNavBar }) {
         setClickedUser(result[0]._id);
       }
 
+      function handleChange(e) {
+        setText(e);
+        setTyping(false);
+
+        if(!socketConnected) return
+
+        if(!typing) {
+            socket.emit('typing', selectedInbox._id, user);
+            console.log(selectedInbox)
+            setTyping(true);
+        }
+        setTimeout(function() {
+                socket.emit('typing-stopped', selectedInbox._id, user);
+                setTyping(false);
+        }, 2000);
+    }
+
     return (
         <div className="inbox-div">
             {inboxes.length || user ?
@@ -237,6 +249,9 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                 }
 
                 <InboxSection
+                text={text}
+                setText={setText}
+                handleChange={handleChange}
                 socketConnected={socketConnected}
                 typing={typing}
                 setTyping={setTyping}
