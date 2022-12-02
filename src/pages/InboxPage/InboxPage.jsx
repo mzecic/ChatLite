@@ -245,20 +245,27 @@ export default function InboxPage({ user, navBar, setNavBar }) {
 
         if(!socketConnected) return
 
-        let stillTyping = false;
+        let lastTypingMoment = new Date().getTime();
+        let lastTypingNow = 0;
 
         if(!typing) {
-            stillTyping = true;
-            setTyping(true);
             socket.emit('typing', inboxCopy.current._id, user);
+            setTyping(true);
             console.log(selectedInbox)
+
         }
-        
+
         setTimeout(function() {
-            socket.emit('typing-stopped', selectedInbox._id, user);
-            setTyping(false);
-        }, 2000);
-    }
+                lastTypingNow = new Date().getTime();
+                let diff = lastTypingNow - lastTypingMoment;
+                console.log(diff)
+                if(diff >= 3000) {
+                    console.log('it\'s stopping');
+                    socket.emit('typing-stopped', selectedInbox._id, user);
+                    setTyping(false);
+                }
+            }, 3000);
+        }
 
     return (
         <div className="inbox-div">
