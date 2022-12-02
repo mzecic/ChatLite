@@ -78,7 +78,7 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
                 <div>
                     {isTyping ?
                         // <div className="typing-animation">Typing...</div>
-                        <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_SCdC0F.json"  background="transparent"  speed="1"  style={{"width": "100px", "height": "100px", "margin-left": "15px" }}  loop autoplay></lottie-player>
+                        <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_SCdC0F.json" background="transparent"  speed="1"  style={{"width": "75px", "height": "75px", "margin-left": "15px" }}  loop autoplay></lottie-player>
                     :
                     <></>
                     }

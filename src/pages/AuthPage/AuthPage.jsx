@@ -13,7 +13,7 @@ export default function AuthPage({ setUser }) {
 
     return (
         <main>
-            <h1>ChatLite</h1>
+            <h1 className="title">ChatLite</h1>
             {isLogin ?
                 <LoginForm setUser={setUser} />
             :

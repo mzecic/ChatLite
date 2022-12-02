@@ -156,7 +156,7 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                     })
                     socket.on('typing-stopped', function(room) {
                         console.log('what the heck')
-                        setIsTyping(false);
+                            setIsTyping(false);
                     })
                 }
       })();
@@ -191,7 +191,6 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                 selectedInboxes.forEach(inbox => inbox.classList.remove('selected-inbox'))
             }
         }
-
 
         if(selectedInbox && selectedInbox !== inbox) {
             socket.emit('leave-room', selectedInbox._id, inbox, user);
@@ -246,15 +245,18 @@ export default function InboxPage({ user, navBar, setNavBar }) {
 
         if(!socketConnected) return
 
+        let stillTyping = false;
+
         if(!typing) {
+            stillTyping = true;
             setTyping(true);
             socket.emit('typing', inboxCopy.current._id, user);
             console.log(selectedInbox)
         }
+        
         setTimeout(function() {
-            setTyping(false);
             socket.emit('typing-stopped', selectedInbox._id, user);
-
+            setTyping(false);
         }, 2000);
     }
 
