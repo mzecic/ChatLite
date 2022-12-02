@@ -69,8 +69,11 @@ export default function InboxPage({ user, navBar, setNavBar }) {
             if(!selectedInbox || selectedInbox._id !== updatedInbox._id) {
                 let currentInboxes = [...inboxes];
                 let inboxToUpdate = currentInboxes.find(inbox => inbox._id === updatedInbox._id);
-                currentInboxes.splice(currentInboxes.indexOf(inboxToUpdate), 1);
-                setInboxes([...currentInboxes, updatedInbox]);
+                let idx = currentInboxes.indexOf(inboxToUpdate)
+                currentInboxes.splice(idx, 1);
+                currentInboxes.splice(idx, 0, updatedInbox)
+                // setInboxes([...currentInboxes, updatedInbox]);
+                setInboxes([...currentInboxes])
                 setSelectedInbox(selectedInbox);
                 let allInboxes = document.querySelectorAll('.chat-item');
                 allInboxes.forEach(i => {
