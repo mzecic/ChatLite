@@ -1,21 +1,25 @@
 .auth-wrapper-login {
     border: 2.7px solid rgb(166, 166, 166);
     border-radius: 1.25rem;
-    background-color: rgba(112, 112, 112, 0.126);
+    background-color: rgba(210, 210, 210, 0.123);
+    box-shadow: 3px 3px 3px 3px rgba(81, 81, 81, 0.393);
     width: 600px;
     height: 500px;
     margin: 100px auto;
     margin-bottom: 0;
+    margin-top: 2vh;
 }
 
 .auth-wrapper-signup {
     border: 1.5px solid rgb(166, 166, 166);
     border-radius: 1.25rem;
-    background-color: rgba(112, 112, 112, 0.126);
+    background-color: rgba(210, 210, 210, 0.123);
+    box-shadow: 3px 3px 3px 3px rgba(81, 81, 81, 0.393);
     width: 600px;
     height: 500px;
     margin: 100px auto;
     margin-bottom: 0;
+    margin-top: 2vh;
 }
 
 .form-container form {
@@ -55,11 +59,12 @@
     .auth-wrapper-login{
         border: 1.5px solid rgb(166, 166, 166);
         border-radius: 1.25rem;
-        background-color: rgba(112, 112, 112, 0.126);
+        background-color: rgba(175, 175, 175, 0.126);
         width: 300px;
         height: 400px;
         margin: 10vh auto;
         margin-bottom: 0;
+        margin-top: 2vh;
     }
 
     .auth-wrapper-signup {
@@ -70,6 +75,7 @@
         height: 450px;
         margin: 10vh auto;
         margin-bottom: 0;
+        margin-top: 2vh;
     }
 
     .form-container form {

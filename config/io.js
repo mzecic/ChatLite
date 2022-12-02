@@ -40,24 +40,22 @@ function init(http) {
             socket.emit('connection');
         })
 
-        socket.on('join-chat', function(room) {
-            socket.join(room._id);
-            console.log('User Joined Room', room._id);
-            console.log(socket.rooms)
+        socket.on('join-chat', function(roomId) {
+            socket.join(roomId);
+            console.log('User Joined Room', roomId);
         })
 
-        socket.on('leave-room', function(roomId) {
-                console.log('user left room:', roomId)
+        socket.on('leave-room', function(roomId, inbox, user) {
+                console.log('user left room:')
                 socket.leave(roomId);
         })
 
-        socket.on('typing', function(room, user) {
-                console.log('typing sent to:', room._id);
-                socket.in(room._id).emit('typing', room);
+        socket.on('typing', function(roomId, user) {
+                console.log('typing sent to:', roomId);
+                socket.in(roomId).emit('typing', roomId);
         })
-        socket.on('typing-stopped',function(room, user) {
-            console.log(room.users, 'stopped typing')
-                socket.in(room._id).emit('typing-stopped', room);
+        socket.on('typing-stopped',function(roomId, user) {
+                socket.in(roomId).emit('typing-stopped', roomId);
         })
 
         socket.on('new-message', function(updatedInbox) {
