@@ -40,18 +40,20 @@ function init(http) {
             socket.emit('connection');
         })
 
-        socket.on('join-chat', function(roomId) {
+        socket.on('join-chat', function(roomId, user) {
             socket.join(roomId);
             console.log('User Joined Room', roomId);
+            socket.in(user._id).emit('correct-room', roomId)
         })
 
         socket.on('leave-room', function(roomId, inbox, user) {
-                console.log('user left room:')
+                console.log('user left room:', roomId)
                 socket.leave(roomId);
         })
 
         socket.on('typing', function(roomId, user) {
                 console.log('typing sent to:', roomId);
+                console.log(io.sockets.adapter.rooms.get(roomId))
                 socket.in(roomId).emit('typing', roomId);
         })
         socket.on('typing-stopped',function(roomId, user) {
