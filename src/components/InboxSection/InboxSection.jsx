@@ -16,42 +16,6 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
     // const [text, setText] = useState('');
 
 
-
-    // let selectedInboxBackup = null;
-
-
-    // useEffect(function() {
-
-    //     (async function() {
-    //         if (selectedInbox) {
-    //             const inboxMessages = await messagesAPI.getMessages(selectedInbox._id)
-    //             setMessages(inboxMessages);
-    //             socket.emit('join-chat', selectedInbox._id);
-    //             selectedInboxBackup = selectedInbox;
-    //         }
-    //     })();
-
-    // }, [selectedInbox])
-
-
-    // useEffect(function() {
-    //     socket.on('message-receive', function(newMessage, previousMessages) {
-    //         if(!selectedInboxBackup || selectedInboxBackup._id !== newMessage.inboxId) {
-    //             //notifications
-    //             console.log('not in inbox currently');
-    //             // console.log(selectedInboxBackup._id);
-    //             // setLastMessage(newMessage);
-    //         } else if(selectedInbox._id === newMessage.inboxId) {
-    //             console.log('fires when im not here');
-    //             console.log(selectedInbox._id);
-    //             setMessages([...messages, newMessage]);
-    //             // setLastMessage(newMessage);
-    //         }
-    //     })
-    // }, [selectedInbox])
-
-
-
     useEffect(function() {
         (async function() {
             if (selectedInbox) {
@@ -129,7 +93,8 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
                 <>
                 <div>
                     {isTyping ?
-                        <div className="typing-animation">Typing...</div>
+                        // <div className="typing-animation">Typing...</div>
+                        <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_SCdC0F.json"  background="transparent"  speed="1"  style={{"width": "100px", "height": "100px", "margin-left": "15px" }}  loop autoplay></lottie-player>
                     :
                     <></>
                     }
