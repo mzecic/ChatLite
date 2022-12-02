@@ -18,12 +18,14 @@ export default function InboxPage({ user, navBar, setNavBar }) {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [notifications, setNotifications] = useState([]);
     const usersOnline = useRef([]);
+    const inboxCopy = useRef([]);
     const [socketConnected, setSocketConnected] = useState(false);
     const [inboxToRemove, setInboxToRemove] = useState(null);
     const [clickedUser, setClickedUser] = useState(null);
     const [typing, setTyping] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
     const [text, setText] = useState('');
+
 
 
     let selectedInboxBackup = null;
@@ -133,15 +135,16 @@ export default function InboxPage({ user, navBar, setNavBar }) {
     }, [inboxes]);
 
     useEffect(function() {
-        selectedInboxBackup = selectedInbox;
         (async function() {
+                selectedInboxBackup = selectedInbox;
                 const result = await inboxAPI.getInboxes(user._id);
                 setInboxes(result);
 
-                console.log('this use effect is firing', selectedInboxBackup);
+                console.log('this use effect is firing', selectedInbox);
 
                 if(selectedInbox) {
-                    socket.emit('join-chat', selectedInbox._id);
+                    socket.emit('join-chat', selectedInbox._id, user);
+
                     setTyping(false);
                     setIsTyping(false);
                     socket.on('typing', function(room) {
@@ -189,11 +192,14 @@ export default function InboxPage({ user, navBar, setNavBar }) {
             }
         }
 
-        selectedInboxBackup = inbox;
-        if(selectedInbox) {
+
+        if(selectedInbox && selectedInbox !== inbox) {
             socket.emit('leave-room', selectedInbox._id, inbox, user);
         }
+        selectedInboxBackup = inbox;
         setSelectedInbox(inbox);
+        inboxCopy.current = inbox;
+        console.log(inboxCopy.current)
         console.log(selectedInbox._id)
 
     }
@@ -242,9 +248,8 @@ export default function InboxPage({ user, navBar, setNavBar }) {
 
         if(!typing) {
             setTyping(true);
-            socket.emit('typing', selectedInbox._id, user);
+            socket.emit('typing', inboxCopy.current._id, user);
             console.log(selectedInbox)
-
         }
         setTimeout(function() {
             setTyping(false);

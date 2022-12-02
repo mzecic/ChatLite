@@ -26,22 +26,6 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
         })();
     }, [selectedInbox, user])
 
-    // function handleChange(e) {
-    //     setText(e);
-    //     setTyping(false);
-    //     if(!socketConnected) return
-
-    //     if(!typing) {
-    //         socket.emit('typing', selectedInbox, user);
-    //         console.log(selectedInbox)
-    //         setTyping(true);
-    //     }
-    //     setTimeout(function() {
-    //             socket.emit('typing-stopped', selectedInbox, user);
-    //             setTyping(false);
-    //     }, 2000);
-    // }
-
     async function handleClick(e) {
 
 
@@ -84,7 +68,7 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
                 </div>
             :
             <>
-                <h1>or a new user to chat with</h1>
+                <h1>or a user to chat with</h1>
                 <h1>Select an existing chat</h1>
             </>
             }
