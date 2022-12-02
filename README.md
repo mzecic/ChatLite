@@ -31,7 +31,7 @@ Simple chat app built with the MERN stack and socket.io.
 
 ## How to use
 
-* link to heroku
+* https://c-lite.herokuapp.com/
 
 ## Technologies used
  - HTML
