@@ -66,25 +66,34 @@ export default function InboxPage({ user, navBar, setNavBar }) {
     useEffect(function() {
         socket.on('message-receive', function(updatedInbox) {
             setIsTyping(false);
-            // let newMessage = updatedInbox.messages[updatedInbox.messages.length - 1];
-            // console.log(selectedInbox, updatedInbox);
             if(!selectedInbox || selectedInbox._id !== updatedInbox._id) {
                 let currentInboxes = [...inboxes];
                 let inboxToUpdate = currentInboxes.find(inbox => inbox._id === updatedInbox._id);
                 currentInboxes.splice(currentInboxes.indexOf(inboxToUpdate), 1);
-                // currentInboxes.splice(currentInboxes.indexOf(inboxToUpdate), 0, updatedInbox)
                 setInboxes([...currentInboxes, updatedInbox]);
                 setSelectedInbox(selectedInbox);
-                //notifications
+                let allInboxes = document.querySelectorAll('.chat-item');
+                allInboxes.forEach(i => {
+                    if(i.classList.contains(updatedInbox._id)){
+                        console.log(i.children);
+                        i.children[2].lastChild.classList.add('notification')
+                    }
+                })
                 console.log('not in inbox');
             } else {
-                // console.log(selectedIn, selectedInbox);
                     console.log('im getting the message');
                     // updatedInbox.messages.shift(0, updatedInbox.messages.length/2);
                     setSelectedInbox(updatedInbox);
                     document.querySelector('.messages-list').lastChild.scrollIntoView(false)
                     setLastMessage(lastMessage);
                     // setLastMessage(newMessage);
+                    let allInboxes = document.querySelectorAll('.chat-item');
+                    allInboxes.forEach(i => {
+                        if(i.classList.contains(updatedInbox._id)){
+                            console.log(i.children);
+                            i.children[2].lastChild.classList.remove('notification')
+                        }
+                    })
             }
         })
     })
@@ -171,18 +180,19 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                 e.target.parentNode.classList.add('selected-inbox')
                 selectedInboxes.forEach(inbox => inbox.classList.remove('selected-inbox'))
             } else if(e.target.matches('div')) {
+                e.target.children[2].lastChild.classList.remove('notification');
                 e.target.classList.add('selected-inbox');
                 selectedInboxes.forEach(inbox => inbox.classList.remove('selected-inbox'))
             }
         }
 
-
+        selectedInboxBackup = inbox;
         if(selectedInbox) {
             socket.emit('leave-room', selectedInbox._id, inbox, user);
         }
         setSelectedInbox(inbox);
         console.log(selectedInbox._id)
-        selectedInboxBackup = inbox;
+
     }
 
       async function handleUserClick(e) {
@@ -228,13 +238,15 @@ export default function InboxPage({ user, navBar, setNavBar }) {
         if(!socketConnected) return
 
         if(!typing) {
+            setTyping(true);
             socket.emit('typing', selectedInbox._id, user);
             console.log(selectedInbox)
-            setTyping(true);
+
         }
         setTimeout(function() {
-                socket.emit('typing-stopped', selectedInbox._id, user);
-                setTyping(false);
+            setTyping(false);
+            socket.emit('typing-stopped', selectedInbox._id, user);
+
         }, 2000);
     }
 
