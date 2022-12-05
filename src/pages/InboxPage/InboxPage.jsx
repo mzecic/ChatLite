@@ -120,9 +120,8 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                     }).filter(user => user !== undefined))
 
                 })
-
-
         })();
+        return 
     }, [user])
 
     useEffect(function() {
