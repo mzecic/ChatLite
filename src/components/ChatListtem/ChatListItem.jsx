@@ -1,21 +1,11 @@
 import './ChatListItem.css';
 import * as inboxAPI from '../../utilities/inbox-api';
-import * as messagesAPI from '../../utilities/messages-api';
-import { useState, useEffect, useRef } from 'react';
-import MediaQuery from 'react-responsive';
+import { useState, useEffect } from 'react';
 
 
-export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox, lastMessage, setLastMessage, allMessages, mess }, ref) {
+
+export default function ChatListItem({ inbox, user, handleInboxClick, handleRemoveInbox }) {
     const [secondUser, setSecondUser] = useState({});
-    const [message, setMessage] = useState(null);
-    // const [messages] = useRef();
-
-
-    useEffect(function() {
-        (async function() {
-            setLastMessage(lastMessage);
-        })();
-    }, [lastMessage])
 
     useEffect(function() {
         (async function() {
