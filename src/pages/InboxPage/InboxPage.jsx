@@ -2,12 +2,10 @@ import './InboxPage.css';
 import { useState, useEffect, useRef } from 'react';
 import * as inboxAPI from '../../utilities/inbox-api';
 import * as usersAPI from '../../utilities/users-api';
-import * as messagesAPI from '../../utilities/messages-api';
 import ChatList from '../../components/ChatList/ChatList';
 import UserList from '../../components/UserList/UserList';
 import InboxSection from '../../components/InboxSection/InboxSection';
 import socket from '../../utilities/socket';
-import { propTypes } from 'react-input-emoji';
 
 export default function InboxPage({ user, navBar, setNavBar }) {
     const [inboxes, setInboxes] = useState([]);
@@ -171,8 +169,8 @@ export default function InboxPage({ user, navBar, setNavBar }) {
             return e.target.classList[0] === inbox._id;
         })
         const result = await inboxAPI.removeInbox(removeInbox);
-        setInboxToRemove(result);
-        console.log(e.target.classList)
+        // saving comment below for new feature
+        // setInboxToRemove(result);
         const newInboxes = [...inboxes];
         newInboxes.pop(removeInbox);
         setInboxes([...newInboxes]);
@@ -285,8 +283,6 @@ export default function InboxPage({ user, navBar, setNavBar }) {
                 isTyping={isTyping}
                 setIsTyping={setIsTyping}
                 setSelectedInbox={setSelectedInbox}
-                lastMessage={lastMessage}
-                setLastMessage={setLastMessage}
                 messages={messages}
                 setMessages={setMessages}
                 notifications={notifications}
