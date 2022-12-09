@@ -43,8 +43,9 @@ export default function InboxSection({ setSelectedInbox, selectedInbox, user, no
             }
             socket.emit('new-message', updatedInbox);
             socket.emit('typing-stopped', selectedInbox._id);
-            setLastMessage(updatedInbox.messages[updatedInbox.messages.length - 1]);
             setText('');
+            document.querySelector('.input-div:first-child').value = '';
+            console.log(document.querySelector('.input-div:first-child').value = '')
             document.querySelector('.messages-list').lastChild.scrollIntoView(false)
         }
 
